@@ -25,6 +25,8 @@ public class NFCCommunicationThread implements Runnable {
 	private Card currentCard;
 	private ATR currentATR;
 	
+	private Guest currentGuest;
+	
 	private int status;
 	
 	// Sleeping time
@@ -43,7 +45,11 @@ public class NFCCommunicationThread implements Runnable {
 		currentCard = null;
 		t = t_step;
 	}
-
+	
+	public Guest getCurrentGuest()
+	{
+		return currentGuest;
+	}
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -79,7 +85,7 @@ public class NFCCommunicationThread implements Runnable {
 				} else {
 					// Creating a guest from the info of the NFC card
 					Guest g = Guest.newGuestFromJSONString(cardInfo);
-					
+					currentGuest = g;
 					System.out.println(g.toString());
 				}
 				
@@ -87,6 +93,7 @@ public class NFCCommunicationThread implements Runnable {
 				System.out.println("No card present or unable to read card... trying again");
 				currentCard = null;
 				currentATR = null;
+				currentGuest = null;
 				try {
 					Thread.sleep(t);
 				} catch (InterruptedException e1) {
@@ -97,6 +104,7 @@ public class NFCCommunicationThread implements Runnable {
 				System.out.println("Empty card");
 				currentCard = null;
 				currentATR = null;
+				currentGuest = null;
 			}
 		}
 	}

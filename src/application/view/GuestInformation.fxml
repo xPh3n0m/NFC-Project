@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="800.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.GuestInformationController">
+   <children>
+      <Label layoutX="36.0" layoutY="56.0" text="Guest name: " />
+      <Label layoutX="36.0" layoutY="84.0" text="Balance:" />
+      <Label layoutX="36.0" layoutY="29.0" text="Guest id:" />
+      <TextField id="guest_id" editable="false" layoutX="128.0" layoutY="25.0" />
+      <TextField id="guest_name" editable="false" layoutX="128.0" layoutY="52.0" />
+      <TextField id="guest_balance" editable="false" layoutX="128.0" layoutY="80.0" />
+   </children>
+</AnchorPane>
