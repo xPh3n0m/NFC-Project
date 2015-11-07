@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="300.0" prefWidth="600.0" styleClass="background" stylesheets="@JMetroDarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.BarController">
+   <children>
+      <Button fx:id="confirmOrder" layoutX="180.0" layoutY="200.0" mnemonicParsing="false" onAction="#confirmOrderHandler" prefHeight="40.0" prefWidth="100.0" text="Valider" />
+      <Button fx:id="cancelOrder" disable="true" layoutX="320.0" layoutY="200.0" mnemonicParsing="false" onAction="#cancelOrderHandler" prefHeight="40.0" prefWidth="100.0" text="Annuler" />
+      <Label layoutX="100.0" layoutY="75.0" text="Bières" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="100.0" layoutY="130.0" text="Spiritueux" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <HBox layoutX="250.0" layoutY="74.0">
+         <children>
+            <Button layoutX="205.0" layoutY="74.0" mnemonicParsing="false" onAction="#decrementBeerNumberHandler" pickOnBounds="false" prefHeight="35.0" prefWidth="60.0" text="-" />
+            <TextArea fx:id="noBeers" editable="false" layoutX="200.0" layoutY="75.0" prefHeight="35.0" prefWidth="80.0" />
+            <Button layoutX="200.0" layoutY="74.0" mnemonicParsing="false" onAction="#incrementBeerNumberHandler" prefHeight="35.0" prefWidth="60.0" text="+" />
+         </children>
+      </HBox>
+      <HBox layoutX="250.0" layoutY="130.0">
+         <children>
+            <Button layoutX="205.0" layoutY="74.0" mnemonicParsing="false" onAction="#decrementSpiritsNumberHandler" pickOnBounds="false" prefHeight="35.0" prefWidth="60.0" text="-" />
+            <TextArea fx:id="noSpirits" editable="false" layoutX="241.0" layoutY="74.0" prefHeight="35.0" prefWidth="80.0" />
+            <Button layoutX="312.0" layoutY="74.0" mnemonicParsing="false" onAction="#incrementSpiritsNumberHandler" prefHeight="35.0" prefWidth="60.0" text="+" />
+         </children>
+      </HBox>
+      <TextField fx:id="actionsTextField" layoutX="22.0" layoutY="255.0" prefHeight="31.0" prefWidth="557.0" />
+   </children>
+</AnchorPane>

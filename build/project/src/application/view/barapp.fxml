@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="background" prefHeight="800.0" prefWidth="1236.0" style="-fx-background-color: #ffffff;" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.BarController">
+   <children>
+      <Button fx:id="confirmOrder" defaultButton="true" layoutX="527.0" layoutY="483.0" mnemonicParsing="false" onAction="#confirmOrderHandler" prefHeight="77.0" prefWidth="238.0" text="Valider">
+         <font>
+            <Font size="27.0" />
+         </font></Button>
+      <Button fx:id="cancelOrder" cancelButton="true" disable="true" layoutX="821.0" layoutY="483.0" mnemonicParsing="false" onAction="#cancelOrderHandler" prefHeight="77.0" prefWidth="132.0" text="Annuler">
+         <font>
+            <Font size="27.0" />
+         </font></Button>
+      <Label layoutX="352.0" layoutY="171.0" text="Bières" textFill="#1b1313">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <Label layoutX="342.0" layoutY="346.0" text="Spiritueux" textFill="#251111">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Label>
+      <HBox layoutX="371.0" layoutY="135.0" />
+      <TextField fx:id="actionsTextField" layoutX="321.0" layoutY="611.0" prefHeight="63.0" prefWidth="738.0">
+         <font>
+            <Font size="29.0" />
+         </font></TextField>
+      <HBox layoutX="527.0" layoutY="306.0" spacing="50.0">
+         <children>
+            <Button layoutX="527.0" layoutY="312.0" mnemonicParsing="false" onAction="#decrementSpiritsNumberHandler" pickOnBounds="false" prefHeight="105.0" prefWidth="109.0" text="-">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Button>
+            <TextArea fx:id="noSpirits" editable="false" layoutX="681.0" layoutY="312.0" prefHeight="105.0" prefWidth="109.0">
+               <font>
+                  <Font size="35.0" />
+               </font>
+            </TextArea>
+            <Button layoutX="844.0" layoutY="306.0" mnemonicParsing="false" onAction="#incrementSpiritsNumberHandler" prefHeight="105.0" prefWidth="109.0" text="+">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="527.0" layoutY="144.0" spacing="50.0">
+         <children>
+            <Button layoutX="527.0" layoutY="138.0" mnemonicParsing="false" onAction="#decrementBeerNumberHandler" pickOnBounds="false" prefHeight="105.0" prefWidth="109.0" text="-">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Button>
+            <TextArea fx:id="noBeers" editable="false" layoutX="681.0" layoutY="138.0" prefHeight="105.0" prefWidth="109.0">
+               <font>
+                  <Font size="35.0" />
+               </font>
+            </TextArea>
+            <Button layoutX="844.0" layoutY="138.0" mnemonicParsing="false" onAction="#incrementBeerNumberHandler" prefHeight="105.0" prefWidth="109.0" text="+">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
