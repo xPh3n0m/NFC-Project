@@ -1,74 +1,32 @@
-package application.view;
+package application;
 
 import java.sql.SQLException;
 import java.util.Scanner;
 
-import application.Main;
-import application.ReadWriteNFC;
 import application.model.Guest;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import kw.nfc.communication.ConnectDB;
 import kw.nfc.communication.NFCCard;
 import kw.nfc.communication.NFCCardException;
 import kw.nfc.communication.NFCCommunication;
-import kw.nfc.communication.WriteOrder;
 
-public class GuestInformationController {
+public class SimpleCommunicationTask {
+	
+	public static ConnectDB connDB;
+	public static NFCCard currentNfcCard;
+	
+	public static void main(String[] args) {
 
-	@FXML
-	private AnchorPane background;
-    @FXML
-    private TextField guestIdTextField;
-    @FXML
-    private TextField guestNameTextField;
-    @FXML
-    private TextField guestBalanceTextField;
-
-
-    // Reference to the main application.
-    private ReadWriteNFC mainApp;
-    
-    private ConnectDB connDB;
-    
-    public GuestInformationController() {
-    	
-    }
-    
-    /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
-     */
-    @FXML
-    private void initialize() {
-    	
-    }
-    
-    /**
-     * Is called by the main application to give a reference back to itself.
-     * 
-     * @param mainApp
-     */
-    public void setMainApp(ReadWriteNFC mainApp) {
-        this.mainApp = mainApp;
-
-        // Add observable list data to the table
-    }
-    
-    public void setNewGuest() {
-    	NFCCommunication nfcComm = new NFCCommunication();
-    	
+		NFCCommunication nfcComm = new NFCCommunication();
+    		
 		nfcComm.setOnSucceeded(
     			new EventHandler<WorkerStateEvent>() {
 
     		    @Override
     		    public void handle(WorkerStateEvent t) {
     		    	NFCCard newNfcCard = (NFCCard) t.getSource().getValue();
+    		    	
     		    	String data = newNfcCard.getData();
 					
 					Guest g = Guest.newGuestFromJSONString(data);
@@ -92,19 +50,17 @@ public class GuestInformationController {
 							}
 						}
 					} else {
-						guestNameTextField.setText(g.getName());
-						guestBalanceTextField.setText(g.getBalance() + "");
-						guestIdTextField.setText(g.getGid() + "");
+						System.out.println(g);
 					}
     		    }
     		});
     		
 		nfcComm.setOnFailed(
     				new EventHandler<WorkerStateEvent>() {
-    					
+
     			    @Override
     			    public void handle(WorkerStateEvent t) {
-    			    	guestNameTextField.setText(t.getSource().exceptionProperty().toString());
+    			    	System.out.println(t.getSource().getMessage());
     			    }
     		});
     		
@@ -113,10 +69,11 @@ public class GuestInformationController {
 
     			    @Override
     			    public void handle(WorkerStateEvent t) {
-    			    	guestNameTextField.setText(t.getSource().getException().getMessage());
+    			    	System.out.println(t.getSource().getMessage());
     			    }
     		});
     		
 		nfcComm.start();
-    }
+    	}
 }
+

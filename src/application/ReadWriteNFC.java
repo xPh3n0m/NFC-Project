@@ -27,9 +27,6 @@ public class ReadWriteNFC extends Application {
 		primaryStage.setTitle("NFC Application - Read Guest Information");
 		
 		initRootLayout();
-		
-		// TODO Auto-generated method stub
-		(new Thread(new NFCCommunicationThread())).start();
 	}
 	
 	/**

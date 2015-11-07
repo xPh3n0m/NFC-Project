@@ -10,8 +10,9 @@
       <Label layoutX="36.0" layoutY="56.0" text="Guest name: " />
       <Label layoutX="36.0" layoutY="84.0" text="Balance:" />
       <Label layoutX="36.0" layoutY="29.0" text="Guest id:" />
-      <TextField id="guest_id" editable="false" layoutX="128.0" layoutY="25.0" />
-      <TextField id="guest_name" editable="false" layoutX="128.0" layoutY="52.0" />
-      <TextField id="guest_balance" editable="false" layoutX="128.0" layoutY="80.0" />
+      <TextField id="guestIdTextField" fx:id="guestIdTextField" editable="false" layoutX="128.0" layoutY="25.0" />
+      <TextField id="guestNameTextField" fx:id="guestNameTextField" editable="false" layoutX="128.0" layoutY="52.0" />
+      <TextField id="guestBalanceTextField" fx:id="guestBalanceTextField" editable="false" layoutX="128.0" layoutY="80.0" />
+      <Button layoutX="24.0" layoutY="127.0" mnemonicParsing="false" onAction="#setNewGuest" text="Display new guest" />
    </children>
 </AnchorPane>
