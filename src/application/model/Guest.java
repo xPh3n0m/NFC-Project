@@ -117,14 +117,22 @@ public class Guest {
 		return new Guest(gid, name);
 	}
 
-	public static Guest newGuestFromJSONString(String jsonString) throws ParseException {
+	public static Guest newGuestFromJSONString(String jsonString) {
 		JSONParser parser=new JSONParser();
-		JSONObject guestJSON = (JSONObject) parser.parse(jsonString);
-		long gid = (long) guestJSON.get("gid");
-		String name = (String) guestJSON.get("guest_name");
-		double balance = (double) guestJSON.get("balance");
+		JSONObject guestJSON;
+		try {
+			guestJSON = (JSONObject) parser.parse(jsonString);
+		} catch (ParseException e) {
+			return null;
+		}
 		
-		return new Guest((int) gid, name, balance);
+		if(guestJSON.containsKey("gid") && guestJSON.containsKey("guest_name") && guestJSON.containsKey("balance")) {
+			long gid = (long) guestJSON.get("gid");		
+			String name = (String) guestJSON.get("guest_name");
+			double balance = (double) guestJSON.get("balance");
+			return new Guest((int) gid, name, balance);
+		}
+		return null;
 	}
 	
 	public String toString() {

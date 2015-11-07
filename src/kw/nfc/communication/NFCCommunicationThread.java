@@ -100,11 +100,6 @@ public class NFCCommunicationThread implements Runnable {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} catch (ParseException e) {
-				System.out.println("Empty card");
-				currentCard = null;
-				currentATR = null;
-				currentGuest = null;
 			}
 		}
 	}

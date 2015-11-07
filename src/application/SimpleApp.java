@@ -9,7 +9,7 @@ import org.json.simple.parser.ParseException;
 
 import application.model.Guest;
 import kw.nfc.communication.ConnectDB;
-import kw.nfc.communication.NFCCommunication;
+import kw.nfc.communication._NFCCommunication;
 import kw.nfc.communication.Utility;
 
 public class SimpleApp {
@@ -186,7 +186,7 @@ public class SimpleApp {
 	}
 	
 	private static void writeDataToWristband(String data) {
-		NFCCommunication reader = new NFCCommunication();
+		_NFCCommunication reader = new _NFCCommunication();
 		reader.connectToDefaultTerminal();
 		try {
 			reader.writeData(data);
@@ -200,7 +200,7 @@ public class SimpleApp {
 	
 	private static Guest readDataFromWristband() {
 		System.out.println("Please place a wristband on the terminal...");
-		NFCCommunication reader = new NFCCommunication();
+		_NFCCommunication reader = new _NFCCommunication();
 		reader.connectToDefaultTerminal();
 		
 		Guest g = null;
@@ -208,14 +208,8 @@ public class SimpleApp {
 		String data = "";
 		try {
 			data = reader.readData();
-			try {
-				g = Guest.newGuestFromJSONString(data);
-				System.out.println(g.toString());
-				
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			g = Guest.newGuestFromJSONString(data);
+			System.out.println(g.toString());
 		} catch (CardException e) {
 			System.out.println("Failed to read from wristband");
 			e.printStackTrace();
