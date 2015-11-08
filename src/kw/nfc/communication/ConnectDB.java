@@ -108,6 +108,25 @@ public class ConnectDB {
 
         return gid;
 	}
+	
+	public Guest getGuestFromDB(int gid) throws SQLException {
+		String query = "SELECT * FROM guest WHERE gid = ?;";
+		PreparedStatement psm = conn.prepareStatement(query);
+		psm.setInt(1, gid);
+		ResultSet res = psm.executeQuery();
+		
+		String name = "";
+		double balance = 0.0;
+        while(res.next()) {
+        	name = res.getString("guest_name");
+        	balance = res.getDouble("balance");
+        }
+        
+        Guest g = new Guest(gid, name, balance, this);
+
+        return g;
+	}
+	
 	/*
 	public void setGuestBalance(int gid, double newBalance) {
 		String query = "INSERT INTO guest (gid, guest_name, balance) VALUES (?, ?, ?)";
@@ -142,6 +161,16 @@ public class ConnectDB {
         	currentBalance = res.getDouble("balance");
         }
 		return currentBalance;
+	}
+
+	public void updateGuest(int gid, String name, double balance) throws SQLException {
+		String query = "UPDATE guest SET guest_name = ?, balance = ? WHERE gid = ?;";
+		
+		PreparedStatement psm = conn.prepareStatement(query);
+		psm.setString(1, name);
+		psm.setDouble(2, gid);
+		psm.setInt(3, gid);
+		psm.executeUpdate();
 	}
 
 }

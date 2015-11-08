@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import application.view.GuestInformationController;
 import javafx.application.Application;
@@ -9,7 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import kw.nfc.communication.ConnectDB;
+import kw.nfc.communication.NFCCommunication;
 import kw.nfc.communication.NFCCommunicationThread;
+import kw.nfc.communication.TerminalException;
 
 public class ReadWriteNFC extends Application {
 	
@@ -41,6 +45,28 @@ public class ReadWriteNFC extends Application {
             
             GuestInformationController controller = loader.getController();
             controller.setMainApp(this);
+            
+            ConnectDB connDB = new ConnectDB();
+            try {
+				connDB.connect();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.exit(0);
+			}
+            controller.setConnDB(connDB);
+            
+            NFCCommunication nfcComm = new NFCCommunication();
+            try {
+				nfcComm.connectToDefaultTerminal();
+			} catch (TerminalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.exit(0);
+			}
+            controller.setNFCCommunication(nfcComm);
+            
+            controller.startReadingNFCCards();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);

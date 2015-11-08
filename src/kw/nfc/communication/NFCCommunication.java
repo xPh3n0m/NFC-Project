@@ -14,30 +14,15 @@ import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
 
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 
-public class NFCCommunication extends Service<NFCCard>{
+public class NFCCommunication{
 	
 	private CardTerminal terminal;
-	private Task<NFCCard> task;
 	
 	private String buffer = "";
 	
 	public NFCCommunication() {
 		
-	}
-	
-
-	@Override
-	protected Task<NFCCard> createTask() {
-		task = new Task<NFCCard>() {
-            @Override
-            protected NFCCard call() throws NFCCardException {
-            	return getCurrentNFCCard();
-            }
-		};
-		return task;
 	}
 	
 	/**
@@ -99,7 +84,6 @@ public class NFCCommunication extends Service<NFCCard>{
 	private String _readDataFromCard(Card card) throws CardException {
         // Get the card channel
         CardChannel cc = card.getBasicChannel();
-
         String cardData = _readData(cc);
         
         return cardData;
@@ -141,7 +125,9 @@ public class NFCCommunication extends Service<NFCCard>{
 	
 	
 	public boolean writeDataToNFCCard(String data, NFCCard card) throws NFCCardException {
+		
 		NFCCard currentCard;
+		
 		try {
 			currentCard = getCurrentNFCCard();
 			if(currentCard.equals(card)) {
@@ -166,7 +152,7 @@ public class NFCCommunication extends Service<NFCCard>{
 
 			
 		} catch (NFCCardException e) {
-			throw new NFCCardException("No card availble");
+			throw new NFCCardException("No card available");
 		}
 		
 

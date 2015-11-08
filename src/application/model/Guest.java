@@ -27,10 +27,29 @@ public class Guest {
 		this.setBalance(Utility.INITIAL_BALANCE);
 	}
 
-	private Guest(int gid, String name, double balance) {
+	public Guest(int gid, String name, double balance, ConnectDB connDB) {
 		this.setGid(gid);
 		this.setName(name);
 		this.setBalance(balance);
+		this.connDB = connDB;
+	}
+	
+	private Guest(int gid, String name, double balance) throws SQLException {
+		this.setGid(gid);
+		this.setName(name);
+		this.setBalance(balance);
+		this.connDB = new ConnectDB();
+		connDB.connect();
+	}
+	
+	public boolean equals(Guest g) {
+		if(g == null) {
+			return false;
+		}
+		if((!g.getName().equals(name)) || (g.getBalance() != balance)) {
+			return false;
+		}
+		return true;
 	}
 	
 	private void setBalance(double b) {
@@ -43,7 +62,7 @@ public class Guest {
 		j.put("gid", gid);
 		j.put("guest_name", name);
 		j.put("balance", balance);
-		
+
 		return j;
 	}
 
@@ -121,6 +140,7 @@ public class Guest {
 		JSONParser parser=new JSONParser();
 		JSONObject guestJSON;
 		try {
+			System.out.println(jsonString);
 			guestJSON = (JSONObject) parser.parse(jsonString);
 		} catch (ParseException e) {
 			return null;
@@ -130,7 +150,11 @@ public class Guest {
 			long gid = (long) guestJSON.get("gid");		
 			String name = (String) guestJSON.get("guest_name");
 			double balance = (double) guestJSON.get("balance");
-			return new Guest((int) gid, name, balance);
+			try {
+				return new Guest((int) gid, name, balance);
+			} catch (SQLException e) {
+				return null;
+			}
 		}
 		return null;
 	}
@@ -141,6 +165,10 @@ public class Guest {
 		guestInfo += "\nGuest name: " + name;
 		guestInfo += "\nCurrent balance: " + balance;
 		return guestInfo;
+	}
+
+	public void updateDatabase() throws SQLException {
+		connDB.updateGuest(gid, name, balance);
 	}
 
 }

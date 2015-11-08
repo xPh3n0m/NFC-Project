@@ -12,6 +12,10 @@ public final class Utility {
 	public static boolean CANCELED = false;
 	
 	public static final double INITIAL_BALANCE = 0.0;
+
+	public static final int NEW_NFC_CARD = 1;
+	public static final int CARD_PRESENT = 2;
+	public static final int CARD_ABSCENT = 2;
 	
 	private static int currentGid = 0;
 
