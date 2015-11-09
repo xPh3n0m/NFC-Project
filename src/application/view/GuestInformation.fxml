@@ -6,16 +6,36 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="800.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.GuestInformationController">
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.GuestInformationController">
    <children>
-      <Label layoutX="36.0" layoutY="56.0" text="Guest name: " />
-      <Label layoutX="36.0" layoutY="84.0" text="Balance:" />
-      <Label layoutX="36.0" layoutY="29.0" text="Guest id:" />
-      <TextField id="guestIdTextField" fx:id="guestIdTextField" editable="false" layoutX="128.0" layoutY="25.0" />
-      <TextField id="guestNameTextField" fx:id="guestNameTextField" editable="false" layoutX="128.0" layoutY="52.0" />
-      <TextField id="guestBalanceTextField" fx:id="guestBalanceTextField" editable="false" layoutX="128.0" layoutY="80.0" />
-      <Label id="errorLabel" fx:id="errorLabel" layoutX="36.0" layoutY="120.0" />
-      <Button fx:id="registerGuestButton" layoutX="303.0" layoutY="52.0" mnemonicParsing="false" onAction="#registerGuest" text="Register new guest" visible="false" />
-      <Label fx:id="messageLabel" layoutX="36.0" layoutY="196.0" />
+      <SplitPane dividerPositions="0.49906191369606" orientation="VERTICAL" prefHeight="535.0" prefWidth="452.0">
+         <items>
+            <AnchorPane prefHeight="800.0" prefWidth="450.0">
+               <children>
+                  <Label layoutX="36.0" layoutY="56.0" text="Guest name: " />
+                  <Label layoutX="36.0" layoutY="84.0" text="Balance:" />
+                  <Label layoutX="36.0" layoutY="29.0" text="Guest id:" />
+                  <TextField id="guestIdTextField" fx:id="guestIdTextField" editable="false" layoutX="128.0" layoutY="25.0" />
+                  <TextField id="guestNameTextField" fx:id="guestNameTextField" editable="false" layoutX="128.0" layoutY="52.0" />
+                  <TextField id="guestBalanceTextField" fx:id="guestBalanceTextField" editable="false" layoutX="128.0" layoutY="80.0" />
+                  <Label id="errorLabel" fx:id="errorLabel" layoutX="36.0" layoutY="120.0" />
+                  <Button fx:id="registerGuestButton" layoutX="303.0" layoutY="52.0" mnemonicParsing="false" onAction="#registerGuest" text="Register new guest" visible="false" />
+                  <Label fx:id="messageLabel" layoutX="36.0" layoutY="196.0" />
+                  <Button fx:id="getCashBackButton" layoutX="303.0" layoutY="80.0" mnemonicParsing="false" onAction="#getCashBack" text="Get cash back" visible="false" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="800.0" prefWidth="84.0">
+               <children>
+                  <TextField fx:id="beersTextField" layoutX="138.0" layoutY="28.0" onAction="#updateTotal" prefHeight="25.0" prefWidth="60.0" text="0" />
+                  <Label layoutX="34.0" layoutY="32.0" text="Beers" />
+                  <Label layoutX="34.0" layoutY="87.0" text="Total:" />
+                  <TextField fx:id="totalTextField" editable="false" layoutX="69.0" layoutY="83.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+                  <Label layoutX="84.0" layoutY="32.0" text="5CHF" />
+                  <Button fx:id="orderButton" disable="true" layoutX="142.0" layoutY="83.0" mnemonicParsing="false" text="Order" />
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
    </children>
 </AnchorPane>

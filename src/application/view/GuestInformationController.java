@@ -21,7 +21,9 @@ import kw.nfc.communication.NFCCard;
 import kw.nfc.communication.NFCCardException;
 import kw.nfc.communication.NFCCommunication;
 import kw.nfc.communication.ReadNFCCard;
+import kw.nfc.communication.RegisterGuest;
 import kw.nfc.communication.TerminalException;
+import kw.nfc.communication.UpdateBalance;
 import kw.nfc.communication.UpdateGuest;
 import kw.nfc.communication.Utility;
 import kw.nfc.communication.WriteOrder;
@@ -40,9 +42,17 @@ public class GuestInformationController {
     private Label errorLabel;
     @FXML
     private Button registerGuestButton;
-    
+    @FXML
+    private Button getCashBackButton;
     @FXML 
     private Label messageLabel;
+    
+    @FXML
+    private TextField beersTextField;
+    @FXML
+    private TextField totalTextField;
+    @FXML
+    private Button orderButton;
 
     // Reference to the main application.
     private ReadWriteNFC mainApp;
@@ -102,6 +112,7 @@ public class GuestInformationController {
     		gid = new Integer(guestIdTextField.getText());
     	} catch (NumberFormatException e) {
     		update = false;
+    		
     	}
     	
     	if(update) {
@@ -148,6 +159,111 @@ public class GuestInformationController {
     	    		});
     		
     		updateGuest.start();
+    	} else {
+    		String guest_name = guestNameTextField.getText();
+    		
+    		if(guest_name.equals("")) {
+    			messageLabel.setText("Please enter a valid name");
+    			return;
+    		}
+    		
+    		RegisterGuest regGuest = new RegisterGuest(nfcComm, currentCard, connDB, guest_name);
+    		
+    		regGuest.setOnSucceeded(
+	    			new EventHandler<WorkerStateEvent>() {
+
+	    		    @Override
+	    		    public void handle(WorkerStateEvent t) {
+	    		    	Guest newGuest = (Guest) t.getSource().getValue();
+	    		    	
+	    		    	messageLabel.setText("Succesfully created guest:\n" + newGuest.toString());
+
+						}
+	    		    }
+	    		);
+	    		
+    		regGuest.setOnFailed(
+	    				new EventHandler<WorkerStateEvent>() {
+	    					
+	    			    @Override
+	    			    public void handle(WorkerStateEvent t) {
+	    			    	
+	    			    	if(t.getSource().getException() != null) {
+	    			    		messageLabel.setText(t.getSource().getException().getMessage());
+	    			    	}
+	    			    }
+	    		});
+	    		
+    		regGuest.setOnCancelled(
+	    				new EventHandler<WorkerStateEvent>() {
+
+	    					@Override
+    	    			    public void handle(WorkerStateEvent t) {
+    	    			    	if(t.getSource().getException() != null) {
+    	    			    		messageLabel.setText(t.getSource().getException().getMessage());
+    	    			    	}
+    	    			    }
+	    		});
+    		
+    		regGuest.start();
+    	}
+    }
+    
+    public void getCashBack() {
+    	updateBalance(Utility.INITIAL_BALANCE);
+    }
+    
+    public void updateBalance(double balance) {
+    	UpdateBalance updateBalance = 
+    			new UpdateBalance(nfcComm, currentCard, connDB, currentGuest, balance);
+    	
+    	updateBalance.setOnSucceeded(
+    			new EventHandler<WorkerStateEvent>() {
+
+    		    @Override
+    		    public void handle(WorkerStateEvent t) {
+    		    	Guest newGuest = (Guest) t.getSource().getValue();
+    		    	
+    		    	guestBalanceTextField.setText(newGuest.getBalance() + "");
+    		    	messageLabel.setText("Succesfully updated cash balance");
+
+					}
+    		    }
+    		);
+    		
+    	updateBalance.setOnFailed(
+    				new EventHandler<WorkerStateEvent>() {
+    					
+    			    @Override
+    			    public void handle(WorkerStateEvent t) {
+    			    	
+    			    	if(t.getSource().getException() != null) {
+    			    		messageLabel.setText(t.getSource().getException().getMessage());
+    			    	}
+    			    }
+    		});
+    		
+    	updateBalance.setOnCancelled(
+    				new EventHandler<WorkerStateEvent>() {
+
+    					@Override
+	    			    public void handle(WorkerStateEvent t) {
+	    			    	if(t.getSource().getException() != null) {
+	    			    		messageLabel.setText(t.getSource().getException().getMessage());
+	    			    	}
+	    			    }
+    		});
+		
+    	updateBalance.start();
+    }
+    
+    public void placeOrder() {
+    	double total = new Double(totalTextField.getText());
+    	
+    	if(currentGuest.getBalance() >= total) {
+    		updateBalance(total);
+    	} else {
+    		messageLabel.setText("Unsufficient cash balance");
     	}
     }
     
@@ -163,7 +279,8 @@ public class GuestInformationController {
     		    	currentCard = newNfcCard;
     		    	String data = newNfcCard.getData();
 					
-					Guest g = Guest.newGuestFromJSONString(data);
+					Guest g;
+					g = Guest.newGuestFromJSONString(data, connDB);
 
 					if(g == null) {
 						if(status != Utility.NEW_NFC_CARD) {
@@ -174,6 +291,9 @@ public class GuestInformationController {
 							registerGuestButton.setText("Register new guest");
 							registerGuestButton.setVisible(true);
 							guestNameTextField.setEditable(true);
+
+							getCashBackButton.setVisible(false);
+							orderButton.setDisable(true);
 						}
 						/*
 						Guest newGuest;
@@ -200,6 +320,8 @@ public class GuestInformationController {
 							registerGuestButton.setText("Update guest");
 							registerGuestButton.setVisible(true);
 							guestNameTextField.setEditable(true);
+							getCashBackButton.setVisible(true);
+							orderButton.setDisable(false);
 						}
 						/*
 						try {
@@ -238,6 +360,8 @@ public class GuestInformationController {
 						guestIdTextField.setText("");
 						registerGuestButton.setVisible(false);
 						guestNameTextField.setEditable(false);
+						getCashBackButton.setVisible(false);
+						orderButton.setDisable(true);
 						/*
 						try {
 							Thread.sleep(1000);
@@ -266,6 +390,8 @@ public class GuestInformationController {
 						guestIdTextField.setText("");
 						registerGuestButton.setVisible(false);
 						guestNameTextField.setEditable(false);
+						getCashBackButton.setVisible(false);
+						orderButton.setDisable(true);
 						/*
 						try {
 							Thread.sleep(1000);
@@ -280,6 +406,11 @@ public class GuestInformationController {
     	
     		readNFC.start();
     	
+    }
+    
+    public void updateTotal() {
+    	int nbBeers = new Integer(beersTextField.getText());
+    	totalTextField.setText((nbBeers * 5.0) + "");
     }
 
 	public void setConnDB(ConnectDB connDB2) {

@@ -61,7 +61,7 @@ public class SimpleApp {
 			String name = (new Scanner(System.in)).nextLine();
 			Guest g = null;
 			try {
-				g = Guest.newGuest(name, connDB);
+				g = Guest.newGuestInDatabase(name, connDB);
 			} catch (SQLException e) {
 				System.out.println("Database problem...");
 				e.printStackTrace();
@@ -208,7 +208,7 @@ public class SimpleApp {
 		String data = "";
 		try {
 			data = reader.readData();
-			g = Guest.newGuestFromJSONString(data);
+			g = Guest.newGuestFromJSONString(data, connDB);
 			System.out.println(g.toString());
 		} catch (CardException e) {
 			System.out.println("Failed to read from wristband");

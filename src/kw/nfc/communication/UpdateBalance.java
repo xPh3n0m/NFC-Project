@@ -6,7 +6,7 @@ import application.model.Guest;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class UpdateGuest extends Service<Guest> {
+public class UpdateBalance extends Service<Guest> {
 
 	private NFCCommunication nfcComm;
 	private Task<Guest> task;
@@ -15,14 +15,14 @@ public class UpdateGuest extends Service<Guest> {
 	
 	private ConnectDB connDB;
 	
-	public UpdateGuest(NFCCommunication nfcComm, NFCCard card, ConnectDB connDB) {
+	private double newBalance;
+	
+	public UpdateBalance(NFCCommunication nfcComm, NFCCard card, ConnectDB connDB, Guest g, double newBalance) {
 		this.nfcComm = nfcComm;
 		this.connDB = connDB;
 		this.card = card;
-	}
-	
-	public void setNewGuest(Guest g) {
-		guest = g;
+		this.guest = g;
+		this.newBalance = newBalance;
 	}
 
 	@Override
@@ -30,11 +30,8 @@ public class UpdateGuest extends Service<Guest> {
 		task = new Task<Guest>() {
             @Override
             protected Guest call() throws NFCCardException, SQLException {
-            	//Guest dbGuest = connDB.getGuestFromDB(guest.getGid());
-            	// TODO: Check whether the guest exists already in the database. If not, throw exception
+            	guest.setBalanceOnline(newBalance, connDB);
             	nfcComm.writeDataToNFCCard(guest.getJSONString().toJSONString(), card);
-            	
-            	guest.updateDatabase();
             	
             	return guest;
             }

@@ -84,9 +84,11 @@ public class NFCCommunicationThread implements Runnable {
 					}
 				} else {
 					// Creating a guest from the info of the NFC card
+					
+					/*
 					Guest g = Guest.newGuestFromJSONString(cardInfo);
 					currentGuest = g;
-					System.out.println(g.toString());
+					System.out.println(g.toString());*/
 				}
 				
 			} catch (CardException e) {

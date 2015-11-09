@@ -15,17 +15,6 @@ public class Guest {
 	private String name;
 	private double balance;
 	private ConnectDB connDB;
-	
-	private Guest(String name) {
-		this.setName(name);
-		this.setBalance(Utility.INITIAL_BALANCE);
-	}
-	
-	private Guest(int gid, String name) {
-		this.setGid(gid);
-		this.setName(name);
-		this.setBalance(Utility.INITIAL_BALANCE);
-	}
 
 	public Guest(int gid, String name, double balance, ConnectDB connDB) {
 		this.setGid(gid);
@@ -33,20 +22,27 @@ public class Guest {
 		this.setBalance(balance);
 		this.connDB = connDB;
 	}
-	
+	/*
 	private Guest(int gid, String name, double balance) throws SQLException {
 		this.setGid(gid);
 		this.setName(name);
 		this.setBalance(balance);
 		this.connDB = new ConnectDB();
 		connDB.connect();
-	}
+	}*/
 	
+	public Guest(int gid2, String name2, ConnectDB connDB2) {
+		this.setGid(gid2);
+		this.setName(name2);
+		this.setBalance(Utility.INITIAL_BALANCE);
+		this.connDB = connDB2;
+	}
+
 	public boolean equals(Guest g) {
 		if(g == null) {
 			return false;
 		}
-		if((!g.getName().equals(name)) || (g.getBalance() != balance)) {
+		if((g.getGid() != gid) || (!g.getName().equals(name)) || (g.getBalance() != balance)) {
 			return false;
 		}
 		return true;
@@ -57,10 +53,15 @@ public class Guest {
 		
 	}
 
+	/**
+	 * Creates the JSON String to encode on the bracelet
+	 * Only contains the gid and the balance
+	 * @return
+	 */
 	public JSONObject getJSONString() {
 		JSONObject j = new JSONObject();
 		j.put("gid", gid);
-		j.put("guest_name", name);
+		//j.put("guest_name", name);
 		j.put("balance", balance);
 
 		return j;
@@ -130,31 +131,32 @@ public class Guest {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public static Guest newGuest(String name, ConnectDB connDB) throws SQLException {
+	public static Guest newGuestInDatabase(String name, ConnectDB connDB) throws SQLException {
 		int gid = connDB.newGuest(name);
 		
-		return new Guest(gid, name);
+		return new Guest(gid, name, connDB);
 	}
 
-	public static Guest newGuestFromJSONString(String jsonString) {
+	public static Guest newGuestFromJSONString(String jsonString, ConnectDB connDB) {
 		JSONParser parser=new JSONParser();
 		JSONObject guestJSON;
 		try {
-			System.out.println(jsonString);
 			guestJSON = (JSONObject) parser.parse(jsonString);
 		} catch (ParseException e) {
 			return null;
 		}
 		
-		if(guestJSON.containsKey("gid") && guestJSON.containsKey("guest_name") && guestJSON.containsKey("balance")) {
+		if(guestJSON.containsKey("gid") && guestJSON.containsKey("balance")) {
 			long gid = (long) guestJSON.get("gid");		
-			String name = (String) guestJSON.get("guest_name");
+			//String name = (String) guestJSON.get("guest_name");
 			double balance = (double) guestJSON.get("balance");
+			Guest g;
 			try {
-				return new Guest((int) gid, name, balance);
+				g = connDB.getGuestFromDB((int) gid);
 			} catch (SQLException e) {
-				return null;
+				g = new Guest((int)gid, new String("NA - Offline mode"), balance, connDB);
 			}
+			return g;
 		}
 		return null;
 	}

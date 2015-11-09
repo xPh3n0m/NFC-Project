@@ -38,6 +38,7 @@ public class BarController {
     private TextArea noSpirits;
     @FXML
     private TextField actionsTextField;
+
     
     private WriteOrder writeOrder;
 

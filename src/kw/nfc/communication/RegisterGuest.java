@@ -1,28 +1,26 @@
 package kw.nfc.communication;
 
 import java.sql.SQLException;
+import java.util.Scanner;
 
 import application.model.Guest;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class UpdateGuest extends Service<Guest> {
+public class RegisterGuest extends Service<Guest> {
 
 	private NFCCommunication nfcComm;
 	private Task<Guest> task;
-	private Guest guest;
+	private String guestName;
 	private NFCCard card;
 	
 	private ConnectDB connDB;
 	
-	public UpdateGuest(NFCCommunication nfcComm, NFCCard card, ConnectDB connDB) {
+	public RegisterGuest(NFCCommunication nfcComm, NFCCard card, ConnectDB connDB, String name) {
 		this.nfcComm = nfcComm;
 		this.connDB = connDB;
 		this.card = card;
-	}
-	
-	public void setNewGuest(Guest g) {
-		guest = g;
+		this.guestName = name;
 	}
 
 	@Override
@@ -30,13 +28,13 @@ public class UpdateGuest extends Service<Guest> {
 		task = new Task<Guest>() {
             @Override
             protected Guest call() throws NFCCardException, SQLException {
-            	//Guest dbGuest = connDB.getGuestFromDB(guest.getGid());
-            	// TODO: Check whether the guest exists already in the database. If not, throw exception
-            	nfcComm.writeDataToNFCCard(guest.getJSONString().toJSONString(), card);
+            	// Write the guest in the database
+    			Guest g = Guest.newGuestInDatabase(guestName, connDB);
+    			
+    			// Write the guest on the wristband
+    			nfcComm.writeDataToNFCCard(g.getJSONString().toJSONString(), card);
             	
-            	guest.updateDatabase();
-            	
-            	return guest;
+            	return g;
             }
 		};
 		return task;

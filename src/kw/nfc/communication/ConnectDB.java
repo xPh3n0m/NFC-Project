@@ -168,7 +168,7 @@ public class ConnectDB {
 		
 		PreparedStatement psm = conn.prepareStatement(query);
 		psm.setString(1, name);
-		psm.setDouble(2, gid);
+		psm.setDouble(2, balance);
 		psm.setInt(3, gid);
 		psm.executeUpdate();
 	}

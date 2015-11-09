@@ -58,7 +58,8 @@ public class SimpleCommunicationTest {
 				} else { 
 					String data = newNfcCard.getData();
 					
-					Guest g = Guest.newGuestFromJSONString(data);
+					Guest g;
+					g = Guest.newGuestFromJSONString(data, connDB);
 					if(g == null) {
 						System.out.println("Unregistered NFC Card. Register a new guest? (y/n)");
 						String choice = (new Scanner(System.in)).nextLine();
@@ -68,7 +69,7 @@ public class SimpleCommunicationTest {
 							
 							Guest newGuest;
 							try {
-								newGuest = Guest.newGuest(guestName, connDB);
+								newGuest = Guest.newGuestInDatabase(guestName, connDB);
 								nfcComm.writeDataToNFCCard(newGuest.getJSONString().toJSONString(), newNfcCard);
 								System.out.println("Succesfully created new user");
 								System.out.println(newGuest);
