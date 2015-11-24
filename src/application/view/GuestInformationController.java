@@ -53,6 +53,11 @@ public class GuestInformationController {
     private TextField totalTextField;
     @FXML
     private Button orderButton;
+    
+    @FXML
+    private TextField addCashTextField;
+    @FXML
+    private Button addCashButton;
 
     // Reference to the main application.
     private ReadWriteNFC mainApp;
@@ -209,6 +214,17 @@ public class GuestInformationController {
     	}
     }
     
+    public void rechargeWristband() {
+    	double amount = new Double (addCashTextField.getText());
+    	
+    	if(amount > Utility.INITIAL_BALANCE) {
+    		//TODO: Get balance information from database?
+    		double balance = currentGuest.getBalance();
+    		updateBalance(amount + balance);
+    		addCashTextField.setText("0.00");
+    	}
+    }
+    
     public void getCashBack() {
     	updateBalance(Utility.INITIAL_BALANCE);
     }
@@ -259,9 +275,10 @@ public class GuestInformationController {
     
     public void placeOrder() {
     	double total = new Double(totalTextField.getText());
+    	double balance = currentGuest.getBalance();
     	
-    	if(currentGuest.getBalance() >= total) {
-    		updateBalance(total);
+    	if(balance >= total) {
+    		updateBalance(balance - total);
     	} else {
     		messageLabel.setText("Unsufficient cash balance");
     	}
@@ -294,6 +311,9 @@ public class GuestInformationController {
 
 							getCashBackButton.setVisible(false);
 							orderButton.setDisable(true);
+							
+							addCashButton.setDisable(true);
+							addCashTextField.setDisable(true);
 						}
 						/*
 						Guest newGuest;
@@ -322,6 +342,8 @@ public class GuestInformationController {
 							guestNameTextField.setEditable(true);
 							getCashBackButton.setVisible(true);
 							orderButton.setDisable(false);
+							addCashButton.setDisable(false);
+							addCashTextField.setDisable(false);
 						}
 						/*
 						try {
@@ -362,6 +384,8 @@ public class GuestInformationController {
 						guestNameTextField.setEditable(false);
 						getCashBackButton.setVisible(false);
 						orderButton.setDisable(true);
+						addCashButton.setDisable(true);
+						addCashTextField.setDisable(true);
 						/*
 						try {
 							Thread.sleep(1000);
@@ -392,6 +416,8 @@ public class GuestInformationController {
 						guestNameTextField.setEditable(false);
 						getCashBackButton.setVisible(false);
 						orderButton.setDisable(true);
+						addCashButton.setDisable(true);
+						addCashTextField.setDisable(true);
 						/*
 						try {
 							Thread.sleep(1000);
