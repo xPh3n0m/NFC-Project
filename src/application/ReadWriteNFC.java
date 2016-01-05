@@ -3,16 +3,14 @@ package application;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import application.view.GuestInformationController;
+import application.view.WristbandRegistrationController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import kw.nfc.communication.ConnectDB;
 import kw.nfc.communication.NFCCommunication;
-import kw.nfc.communication.NFCCommunicationThread;
 import kw.nfc.communication.TerminalException;
 
 public class ReadWriteNFC extends Application {
@@ -28,7 +26,7 @@ public class ReadWriteNFC extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		primaryStage = stage;
-		primaryStage.setTitle("NFC Application - Read Guest Information");
+		primaryStage.setTitle("NFC Application - Wristband Registration");
 		
 		initRootLayout();
 	}
@@ -40,10 +38,10 @@ public class ReadWriteNFC extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("view/GuestInformation.fxml"));
+            loader.setLocation(Main.class.getResource("view/WristbandRegistration.fxml"));
             rootLayout = (AnchorPane) loader.load();
             
-            GuestInformationController controller = loader.getController();
+            WristbandRegistrationController controller = loader.getController();
             controller.setMainApp(this);
             
             ConnectDB connDB = new ConnectDB();

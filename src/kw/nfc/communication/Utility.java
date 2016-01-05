@@ -4,11 +4,16 @@ public final class Utility {
 	
 	public static int currentOrder;
 	
+	public static final boolean ONLINE_MODE = true;
 	public static final String DB_URL = "jdbc:postgresql://localhost:5432/nfc_project";
-	public static final String DB_ONLINE_URL = "jdbc:postgresql://kiwi-db.cxbz0pbtqlru.us-west-2.rds.amazonaws.com:5432/kiwi_db";
+	public static final String DB_ONLINE_URL = "jdbc:postgresql://nfcprojectinstance.cpx69rsmkoux.us-west-2.rds.amazonaws.com:5432/nfcprojectdb";
 
 	public static final String DB_USER = "postgres";
 	public static final String DB_PASSWORD = "EricDebiole#1";
+	
+	public static final String DB_ONLINE_USER = "root";
+	public static final String DB_ONLINE_PASSWORD = "nfcproject";
+	
 	public static boolean CANCELED = false;
 	
 	public static final double INITIAL_BALANCE = 0.0;
@@ -16,6 +21,8 @@ public final class Utility {
 	public static final int NEW_NFC_CARD = 1;
 	public static final int CARD_PRESENT = 2;
 	public static final int CARD_ABSCENT = 2;
+
+
 	
 	private static int currentGid = 0;
 

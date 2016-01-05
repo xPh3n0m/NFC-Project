@@ -1,23 +1,45 @@
 package kw.nfc.communication;
 
+import java.sql.SQLException;
+
+import application.model.NFCWristband;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class ReadNFCCard extends Service<NFCCard> {
+public class ReadNFCCard extends Service<NFCWristband> {
 	
 	private NFCCommunication nfcComm;
-	private Task<NFCCard> task;
+	private ConnectDB connDB;
+	private Task<NFCWristband> task;
 	
-	public ReadNFCCard(NFCCommunication nfcComm) {
+	public ReadNFCCard(NFCCommunication nfcComm, ConnectDB connDB) {
 		this.nfcComm = nfcComm;
+		this.connDB = connDB;
 	}
 
 	@Override
-	protected Task<NFCCard> createTask() {
-		task = new Task<NFCCard>() {
+	protected Task<NFCWristband> createTask() {
+		task = new Task<NFCWristband>() {
             @Override
-            protected NFCCard call() throws NFCCardException {
-            	return nfcComm.getCurrentNFCCard();
+            protected NFCWristband call() throws NFCCardException {
+            	
+            	// Step 1: Read ATR, read NFC data and create NFCWristband object
+            	NFCWristband wristband = nfcComm.getCurrentNFCCard();
+            	
+            	try {
+					NFCWristband dbWristband = connDB.getNFCWristband(wristband.getATR());
+					if(dbWristband != null) { // A match has been found in the database
+						if(!dbWristband.equals(wristband)) {
+							nfcComm.writeDBWristbandToNFCWristband(dbWristband);
+						}
+						dbWristband.setValid(true);
+						return dbWristband;
+					}
+				} catch (SQLException e) {
+					// TODO Handle database connection problems
+					e.printStackTrace();
+				}
+            	return wristband;
             }
 		};
 		return task;

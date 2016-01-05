@@ -14,6 +14,10 @@ import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
 
+import org.json.simple.parser.ParseException;
+
+import application.model.NFCWristband;
+
 
 public class NFCCommunication{
 	
@@ -41,8 +45,9 @@ public class NFCCommunication{
 	 * Returns the current NFC card availbale on the terminal with its ATR and the data found on it
 	 * @return
 	 * @throws NFCCardException if a problem occurs when reading the card
+	 * @throws ParseException 
 	 */
-	public NFCCard getCurrentNFCCard() throws NFCCardException {
+	public NFCWristband getCurrentNFCCard() throws NFCCardException {
 		boolean cardPresent;
 		try {
 			cardPresent = terminal.isCardPresent();
@@ -68,11 +73,16 @@ public class NFCCommunication{
 				throw new NFCCardException("Unable to read from the current card");
 			}
 		    
-		    return new NFCCard(newCard, atr, data);
+		    return NFCWristband.nfcWristbandFromWristbandData(newCard, atr, data);
 		    
 		} else {
 			throw new NFCCardException("No NFC Card available");
 		}
+	}
+	
+
+	public void eraseDataFromWristband(NFCWristband nfcCard) throws NFCCardException {
+		this.writeDataToNFCCard(nfcCard.getJSONData(), nfcCard);
 	}
 	
 	/**
@@ -123,10 +133,43 @@ public class NFCCommunication{
         return Utility.hexToASCII(buffer);
 	}
 	
+
+	public boolean writeDBWristbandToNFCWristband(NFCWristband dbWristband) throws NFCCardException {
+		NFCWristband currentWristband;
+				
+		try {
+			currentWristband = getCurrentNFCCard();
+			if(currentWristband.atrEquals(dbWristband)) {
+				Card c = currentWristband.getCard();
+				CardChannel cc = c.getBasicChannel();
+				
+				String data = dbWristband.getJSONData();
+				if(data != null) {
+					try {
+						if(_writeData(data, cc)) {
+							return true;
+						} else {
+							return false;
+						}
+					} catch (CardException e) {
+						throw new NFCCardException("Unable to write to the NFC Card");
+					}
+				} else {
+					return false;
+				}
+			} else {
+				throw new NFCCardException("The card has changed. Try again");
+			}
+
+			
+		} catch (NFCCardException e) {
+			throw new NFCCardException("No card available");
+		}
+	}
 	
-	public boolean writeDataToNFCCard(String data, NFCCard card) throws NFCCardException {
+	public boolean writeDataToNFCCard(String data, NFCWristband card) throws NFCCardException {
 		
-		NFCCard currentCard;
+		NFCWristband currentCard;
 		
 		try {
 			currentCard = getCurrentNFCCard();
@@ -154,8 +197,6 @@ public class NFCCommunication{
 		} catch (NFCCardException e) {
 			throw new NFCCardException("No card available");
 		}
-		
-
 	}
 		
 	private boolean _writeData(String data, CardChannel cc) throws CardException {
@@ -230,5 +271,7 @@ public class NFCCommunication{
         CommandAPDU writeData = new CommandAPDU(command);
         ResponseAPDU responseWriteData = cc.transmit(writeData);	
 	}
+
+
 
 }

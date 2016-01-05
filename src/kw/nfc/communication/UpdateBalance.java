@@ -3,6 +3,7 @@ package kw.nfc.communication;
 import java.sql.SQLException;
 
 import application.model.Guest;
+import application.model.NFCWristband;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -11,13 +12,13 @@ public class UpdateBalance extends Service<Guest> {
 	private NFCCommunication nfcComm;
 	private Task<Guest> task;
 	private Guest guest;
-	private NFCCard card;
+	private NFCWristband card;
 	
 	private ConnectDB connDB;
 	
 	private double newBalance;
 	
-	public UpdateBalance(NFCCommunication nfcComm, NFCCard card, ConnectDB connDB, Guest g, double newBalance) {
+	public UpdateBalance(NFCCommunication nfcComm, NFCWristband card, ConnectDB connDB, Guest g, double newBalance) {
 		this.nfcComm = nfcComm;
 		this.connDB = connDB;
 		this.card = card;

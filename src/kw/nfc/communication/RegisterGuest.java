@@ -3,24 +3,27 @@ package kw.nfc.communication;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import org.json.simple.parser.ParseException;
+
 import application.model.Guest;
+import application.model.NFCWristband;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class RegisterGuest extends Service<Guest> {
 
-	private NFCCommunication nfcComm;
 	private Task<Guest> task;
-	private String guestName;
-	private NFCCard card;
 	
 	private ConnectDB connDB;
+	private Guest guest;
+	private NFCCommunication nfcComm;
+	private NFCWristband wristband;
 	
-	public RegisterGuest(NFCCommunication nfcComm, NFCCard card, ConnectDB connDB, String name) {
-		this.nfcComm = nfcComm;
+	public RegisterGuest(ConnectDB connDB, NFCCommunication nfcComm, Guest guest, NFCWristband wristband) {
 		this.connDB = connDB;
-		this.card = card;
-		this.guestName = name;
+		this.guest = guest;
+		this.nfcComm = nfcComm;
+		this.wristband = wristband;
 	}
 
 	@Override
@@ -29,10 +32,11 @@ public class RegisterGuest extends Service<Guest> {
             @Override
             protected Guest call() throws NFCCardException, SQLException {
             	// Write the guest in the database
-    			Guest g = Guest.newGuestInDatabase(guestName, connDB);
+    			Guest g = Guest.newGuestInDatabase(guest, connDB);
     			
+    			wristband.setGid(g.getGid());
     			// Write the guest on the wristband
-    			nfcComm.writeDataToNFCCard(g.getJSONString().toJSONString(), card);
+    			nfcComm.writeDataToNFCCard(wristband.getJSONData(), wristband);
             	
             	return g;
             }
