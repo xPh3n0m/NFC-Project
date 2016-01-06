@@ -43,7 +43,22 @@
             <Font size="24.0" />
          </font>
       </TextField>
-      <Button fx:id="orderButton" layoutX="324.0" layoutY="358.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="128.0" text="Order" />
-      <Button fx:id="cancelButton" layoutX="477.0" layoutY="358.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="128.0" text="Cancel" />
+      <Button fx:id="orderButton" layoutX="324.0" layoutY="358.0" mnemonicParsing="false" onAction="#placeOrder" prefHeight="51.0" prefWidth="128.0" text="Order" />
+      <Button fx:id="cancelButton" layoutX="477.0" layoutY="358.0" mnemonicParsing="false" onAction="#cancel" prefHeight="51.0" prefWidth="128.0" text="Cancel" />
+      <AnchorPane layoutX="639.0" layoutY="358.0" prefHeight="142.0" prefWidth="308.0">
+         <children>
+            <Label layoutX="19.0" layoutY="13.0" text="Guest Information" />
+            <Label layoutX="15.0" layoutY="37.0" text="Gid:" />
+            <Label fx:id="gidLabel" layoutX="46.0" layoutY="37.0" text="gid info" />
+            <Label layoutX="16.0" layoutY="63.0" text="Wid:" />
+            <Label fx:id="widLabel" layoutX="47.0" layoutY="63.0" text="wid info" />
+            <Label layoutX="16.0" layoutY="88.0" text="Balance:" />
+            <Label fx:id="balanceLabel" layoutX="69.0" layoutY="88.0" text="balance info" />
+            <Label fx:id="wristbandInfoLabel" layoutX="15.0" layoutY="120.0" text="Wristband info label" />
+            <Label fx:id="wristbandErrorLabel" layoutX="16.0" layoutY="147.0" text="Wristband error label" />
+         </children>
+      </AnchorPane>
+      <Label fx:id="errorOrderLabel" layoutX="47.0" layoutY="462.0" text="Order error label" />
+      <Label fx:id="informationOrderLabel" layoutX="47.0" layoutY="429.0" text="Order information label" />
    </children>
 </AnchorPane>

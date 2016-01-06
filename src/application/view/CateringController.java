@@ -3,15 +3,19 @@ package application.view;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.sun.javafx.iio.gif.GIFDescriptor;
 import com.sun.prism.impl.Disposer.Record;
 
 import application.CashHandlerApp;
 import application.CateringApp;
 import application.model.NFCWristband;
+import application.model.Order;
+import application.model.Transaction;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -33,6 +37,7 @@ import javafx.util.Callback;
 import kw.nfc.communication.ConnectDB;
 import kw.nfc.communication.LoadMenuItems;
 import kw.nfc.communication.NFCCommunication;
+import kw.nfc.communication.ProcessTransaction;
 import kw.nfc.communication.ReadNFCCard;
 
 public class CateringController implements Initializable {
@@ -74,6 +79,22 @@ public class CateringController implements Initializable {
     private Label errorLabel;
     @FXML
     private Label informationLabel;
+    
+    @FXML
+    private Label gidLabel;
+    @FXML
+    private Label widLabel;
+    @FXML
+    private Label balanceLabel;
+    @FXML
+    private Label wristbandInfoLabel;
+    @FXML
+    private Label wristbandErrorLabel;
+    
+    @FXML
+    private Label informationOrderLabel;
+    @FXML
+    private Label errorOrderLabel;
 
     
     private ConnectDB connDB;
@@ -102,6 +123,7 @@ public class CateringController implements Initializable {
 		
 		createQuantityButtons();
 		cateringGroupNumberTextField.setText("1");
+		resetTotal();
 	}
 
 	public void startReadingNFCCards() {
@@ -133,9 +155,16 @@ public class CateringController implements Initializable {
     		    	if(!wristband.uidEquals(currentWristband)) { // A new wristband has been placed, we must read again
     		    		currentWristband = wristband;
     		    		if(wristband.isValid() && wristband.getStatus() == 'A') { // The wristband is not valid, it must be registered before continuing
-    		    			// We are good, we can process transactions
+    		    			gidLabel.setText(wristband.getGid()+"");
+    		    			widLabel.setText(wristband.getWid()+"");
+    		    			balanceLabel.setText(wristband.getBalance()+"");
+    		    			wristbandInfoLabel.setText("");
+    		    			wristbandErrorLabel.setText("");
+    		    			orderButton.setDisable(false);
     		    		} else {
-    		    			// Not good, please register wristband
+    		    			wristbandInfoLabel.setText("This wristband is not registered. Please register before");  
+    		    			wristbandErrorLabel.setText("");
+    		    			orderButton.setDisable(true);
     		    		}
     		    	}
     		    }
@@ -149,9 +178,11 @@ public class CateringController implements Initializable {
     			    	currentWristband = null;
     			    	
     			    	if(t.getSource().getException() != null) {
-    			    		//_displayErrorMessage(t.getSource().getException().getMessage());
+    		    			wristbandInfoLabel.setText("");  
+    		    			wristbandErrorLabel.setText(t.getSource().getException().getMessage());
+    		    			orderButton.setDisable(true);
     			    	} else {
-    			    		//_displayErrorMessage("Unrecognized error");
+    			    		_displayErrorMessage("Unrecognized error");
     			    	}
 
     			    }
@@ -165,14 +196,75 @@ public class CateringController implements Initializable {
     			    	currentWristband = null;
     			    	
     			    	if(t.getSource().getException() != null) {
-    			    		//_displayErrorMessage(t.getSource().getException().getMessage());
-    			    	} else {
-    			    		//_displayErrorMessage("Unrecognized error");
+    		    			wristbandInfoLabel.setText("");  
+    		    			wristbandErrorLabel.setText(t.getSource().getException().getMessage());
+    		    			orderButton.setDisable(true);    			    	
+    		    		} else {
+    			    		_displayErrorMessage("Unrecognized error");
     			    	}
     			    }
     		});
     	
     		readNFC.start();
+    }
+    
+    public void placeOrder() {    	
+    	List<Order> orderList = new ArrayList<Order>();
+    	for(MenuItem mi : menuItemsData) {
+        	Order o = Order.createOrder(mi.getIid(), mi.getItemQuantity(), mi.getItemPrice());
+        	orderList.add(o);
+    	}
+    	newTransaction(orderList);
+    	//updateBalance(Utility.INITIAL_BALANCE);
+    }
+    
+    public void newTransaction(List<Order> orderList) {
+    	
+    	ProcessTransaction processTransaction = new ProcessTransaction(nfcComm, currentWristband, connDB, orderList);
+    	
+    	processTransaction.setOnSucceeded(
+    			new EventHandler<WorkerStateEvent>() {
+
+        		    @Override
+        		    public void handle(WorkerStateEvent t) {
+        		    	Transaction transaction = (Transaction) t.getSource().getValue();
+        		    	
+        		    	balanceLabel.setText(currentWristband.getBalance() + "");
+        		    	informationOrderLabel.setText("Succesfully processed transaction " + transaction.getTransactionId());
+        		    	resetTotal();
+        		    	cancel();
+    					}
+        		    }
+    			);
+    	
+    	processTransaction.setOnFailed(
+				new EventHandler<WorkerStateEvent>() {
+					
+			    @Override
+			    public void handle(WorkerStateEvent t) {
+			    	
+			    	if(t.getSource().getException() != null) {
+			    		errorLabel.setText(t.getSource().getException().getMessage());
+			    	}
+			    	
+			    	informationOrderLabel.setText("Unsufficient funds");
+			    }
+		});
+		
+    	processTransaction.setOnCancelled(
+				new EventHandler<WorkerStateEvent>() {
+
+					@Override
+    			    public void handle(WorkerStateEvent t) {
+    			    	if(t.getSource().getException() != null) {
+    			    		errorLabel.setText(t.getSource().getException().getMessage());
+    			    	}
+    			    	
+    			    	informationOrderLabel.setText("CANCEL in transaction handling");
+					}
+		});
+	
+    	processTransaction.start();
     }
     
     public void decreaseGroupNumber() {
@@ -192,7 +284,7 @@ public class CateringController implements Initializable {
     public void loadMenuItems() {
     	int groupNumber = new Integer(cateringGroupNumberTextField.getText());
     	LoadMenuItems loadMenu = new LoadMenuItems(connDB, groupNumber);
-    	resetTable();
+ 
     	
     	loadMenu.setOnSucceeded(
     			new EventHandler<WorkerStateEvent>() {
@@ -200,7 +292,8 @@ public class CateringController implements Initializable {
     		    @Override
     		    public void handle(WorkerStateEvent t) {
     		    	ArrayList<MenuItem> newMenuItems = (ArrayList<MenuItem>) t.getSource().getValue();
-    				
+    		       	resetTable();
+    		    	resetTotal();
     				for (MenuItem mi : newMenuItems){
     					menuItemsData.add(mi);
     				}
@@ -263,6 +356,18 @@ public class CateringController implements Initializable {
 		}
 		
 		totalTextField.setText(totalPrice+"");
+	}
+	
+	public void resetTotal() {
+		totalTextField.setText("0");
+	}
+	
+	public void cancel() {
+		for(MenuItem mi : menuItemsData) {
+			mi.setTotalPrice(0.0);
+			mi.setItemQuantity(0);
+		}
+		resetTotal();
 	}
     
     /**
