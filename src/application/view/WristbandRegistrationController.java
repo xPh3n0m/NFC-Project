@@ -3,7 +3,7 @@ package application.view;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import application.ReadWriteNFC;
+import application.RegistrationApp;
 import application.model.Guest;
 import application.model.NFCWristband;
 import javafx.concurrent.WorkerStateEvent;
@@ -15,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import kw.nfc.communication.ConnectDB;
-import kw.nfc.communication.DeactivateWristband;
 import kw.nfc.communication.NFCCommunication;
 import kw.nfc.communication.ReadNFCCard;
 import kw.nfc.communication.RegisterGuest;
@@ -75,7 +74,7 @@ public class WristbandRegistrationController {
     private int status;
     
     // Reference to the main application.
-    private ReadWriteNFC mainApp;
+    private RegistrationApp mainApp;
     
     
     /**
@@ -119,7 +118,7 @@ public class WristbandRegistrationController {
      * 
      * @param mainApp
      */
-    public void setMainApp(ReadWriteNFC mainApp) {
+    public void setMainApp(RegistrationApp mainApp) {
         this.mainApp = mainApp;
     }
     

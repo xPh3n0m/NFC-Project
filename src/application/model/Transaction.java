@@ -9,12 +9,12 @@ public class Transaction {
 	
 	private List<Order> orderList;
 	private int transactionId;
-	private Guest guest;
+	private NFCWristband wristband;
 	private double amount;
 	
-	private Transaction(int tid, Guest g, double amount, List<Order> orderList) {
+	private Transaction(int tid, NFCWristband wristband, double amount, List<Order> orderList) {
 		setTransactionId(tid);
-		setGuest(g);
+		setWristband(wristband);
 		this.setAmount(amount);
 		this.setOrderList(orderList);
 	}
@@ -24,20 +24,20 @@ public class Transaction {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public static Transaction newTransaction(Guest g, List<Order> orderList, ConnectDB connDB) throws SQLException {
+	public static Transaction newTransaction(NFCWristband wristband, List<Order> orderList, ConnectDB connDB) throws SQLException {
 		double amount = 0;
 		for(Order o : orderList) {
 			amount += o.getItemPrice() * o.getNumItem();
 		}
 		
-		int tid = connDB.newTransaction(g.getGid(), g.getBalance(), amount);
+		int tid = connDB.newTransaction(wristband.getWid(), wristband.getGid(), wristband.getBalance(), amount);
 		
 		for(Order o : orderList) {
 			o.setTransactionId(tid);
 			connDB.addOrder(o);
 		}
 		
-		return new Transaction(tid, g, amount, orderList);
+		return new Transaction(tid, wristband, amount, orderList);
 	}
 	
 	public void processTransaction(int gid, List<Order> orders) {
@@ -53,12 +53,12 @@ public class Transaction {
 		this.amount = amount;
 	}
 
-	public Guest getGuest() {
-		return guest;
+	public NFCWristband getWristband() {
+		return wristband;
 	}
 
-	public void setGuest(Guest guest) {
-		this.guest = guest;
+	public void setWristband(NFCWristband w) {
+		this.wristband = w;
 	}
 
 	public int getTransactionId() {

@@ -14,19 +14,17 @@ public class ProcessTransaction extends Service<Transaction>{
 	
 	private NFCCommunication nfcComm;
 	private Task<Transaction> task;
-	private Guest guest;
-	private NFCWristband card;
 	
 	private ConnectDB connDB;
+	private NFCWristband wristband;
 	
 	private List<Order> orderList;
 	
-	public ProcessTransaction(NFCCommunication nfcComm, NFCWristband card, ConnectDB connDB, Guest g, List<Order> orderList) {
+	public ProcessTransaction(NFCCommunication nfcComm, NFCWristband wristband, ConnectDB connDB, List<Order> orderList) {
 		this.nfcComm = nfcComm;
 		this.connDB = connDB;
-		this.card = card;
-		this.guest = g;
 		this.orderList = orderList;
+		this.wristband = wristband;
 	}
 
 	@Override
@@ -38,13 +36,18 @@ public class ProcessTransaction extends Service<Transaction>{
             	for(Order o : orderList) {
             		amount += o.getItemPrice() * o.getNumItem();
             	}
-            	if(guest.getBalance() - amount < 0) {
+            	
+            	double newBalance = wristband.getBalance() - amount;
+            	if(newBalance < 0.0) {
             		throw new Exception("Unsufficient balance");
             	}
-            	Transaction t = Transaction.newTransaction(guest, orderList, connDB);
             	
-            	t.getGuest().setBalanceOnline(t.getGuest().getBalance() - t.getAmount(), connDB);
-            	nfcComm.writeDataToNFCCard(t.getGuest().getJSONString().toJSONString(), card);
+            	Transaction t = Transaction.newTransaction(wristband, orderList, connDB);
+            	
+            	wristband.setBalance(newBalance);
+            	connDB.updateBalance(wristband, newBalance);
+            	
+            	nfcComm.writeDataToNFCCard(wristband.getJSONData(), wristband);
             	
             	return t;
             }

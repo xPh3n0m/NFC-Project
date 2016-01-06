@@ -13,7 +13,7 @@ import kw.nfc.communication.ConnectDB;
 import kw.nfc.communication.NFCCommunication;
 import kw.nfc.communication.TerminalException;
 
-public class ReadWriteNFC extends Application {
+public class RegistrationApp extends Application {
 	
 	private Stage primaryStage;
     private AnchorPane rootLayout;

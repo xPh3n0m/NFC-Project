@@ -224,13 +224,14 @@ public class ConnectDB {
 		psm.executeUpdate();		
 	}
 
-	public int newTransaction(int gid, double balance, double amount) throws SQLException {
-		String query = "INSERT INTO transaction (gid, amount, prev_balance, new_balance) VALUES (?, ?, ?, ?) RETURNING tid;";
+	public int newTransaction(int wid, int gid, double balance, double amount) throws SQLException {
+		String query = "INSERT INTO transaction (wid, gid, amount, prev_balance, new_balance) VALUES (?, ?, ?, ?, ?) RETURNING tid;";
 		PreparedStatement psm = conn.prepareStatement(query);
-		psm.setInt(1, gid);
-		psm.setDouble(2, amount);
-		psm.setDouble(3, balance);
-		psm.setDouble(4, balance - amount);
+		psm.setInt(1, wid);
+		psm.setInt(2, gid);
+		psm.setDouble(3, amount);
+		psm.setDouble(4, balance);
+		psm.setDouble(5, balance - amount);
 		ResultSet res = psm.executeQuery();
 		
 		int tid = -1;
@@ -343,4 +344,12 @@ public class ConnectDB {
 		psm.executeUpdate();
 	}
 
+	public void updateBalance(NFCWristband wristband, double newBalance) throws SQLException {
+		String query = "UPDATE wristband SET balance = ? WHERE wid = ?;";
+		
+		PreparedStatement psm = conn.prepareStatement(query);
+		psm.setDouble(1, newBalance);
+		psm.setInt(2, wristband.getWid());
+		psm.executeUpdate();
+	}
 }

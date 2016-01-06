@@ -174,7 +174,7 @@ public class NFCCommunication{
 			currentCard = card;
 			// TODO: Add the below in order to verify that the card we are writing on is still the same card
 			//currentCard = getCurrentNFCCard();
-			if(currentCard.equals(card)) {
+			if(currentCard.uidEquals(card)) {
 				Card c = currentCard.getCard();
 				CardChannel cc = c.getBasicChannel();
 				if(data != null) {
