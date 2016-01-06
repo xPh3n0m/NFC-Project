@@ -64,7 +64,7 @@ public class NFCCommunication{
 				throw new NFCCardException("Unable to connect to the card");
 			}
 		    
-		    byte[] uid = readUid();
+		    byte[] uid = readUid(newCard);
 		    String data;
 			try {
 				data = _readDataFromCard(newCard);
@@ -200,12 +200,9 @@ public class NFCCommunication{
 		}
 	}
 	
-	public byte[] readUid() throws NFCCardException {
-		NFCWristband currentWristband;
+	public byte[] readUid(Card card) throws NFCCardException {
 		try {
-			currentWristband = getCurrentNFCCard();
-			Card c = currentWristband.getCard();
-			CardChannel cc = c.getBasicChannel();
+			CardChannel cc = card.getBasicChannel();
 			
 			byte[] uid = new byte[7];
 	        

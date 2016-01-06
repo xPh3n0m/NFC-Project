@@ -135,7 +135,6 @@ public class WristbandRegistrationController {
     		    @Override
     		    public void handle(WorkerStateEvent t) {
     		    	NFCWristband wristband = (NFCWristband) t.getSource().getValue();
-    		    	
     		    	if(wristband == null) {
     		    		// TODO: Do something here, no value has been returned
     		    		System.exit(0);
@@ -179,6 +178,7 @@ public class WristbandRegistrationController {
 	                		    	activateWristbandButton.setVisible(true);
 	                		    	deactivateWristbandButton.setVisible(false);
 	                		    	_showGuestPanel();
+	                		    	_resetGuestFields();
 	            		    		break;
 	            		    	default:
 	        		    			_displayInformationMessage("Unkown status. Please unregister the wristband. And register it again.");
@@ -208,7 +208,6 @@ public class WristbandRegistrationController {
     			    	} else {
     			    		_displayErrorMessage("Unrecognized error");
     			    	}
-    			    	
     			    	_resetWristbandInfoFields();
     			    	_hideRegistrationButtons();
         		    	_hideGuestPanel();
@@ -544,6 +543,7 @@ public class WristbandRegistrationController {
 		firstNameTextField.setText("");
 		lastNameTextField.setText("");
 		emailTextField.setText("");
+		gidLabel.setText("");
     }
     
     private void _fillWristbandInformationLabels(String wid, String atr, String status, String balance) {

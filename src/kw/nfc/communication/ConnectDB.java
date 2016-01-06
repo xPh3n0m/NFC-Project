@@ -6,9 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.smartcardio.ATR;
-import javax.smartcardio.Card;
-
 import application.model.Guest;
 import application.model.NFCWristband;
 import application.model.Order;
@@ -263,9 +260,9 @@ public class ConnectDB {
 	}
 
 	public NFCWristband newWristband(NFCWristband wristband) throws SQLException {
-		String query = "INSERT INTO wristband (atr, balance, gid, status) VALUES (?, ?, ?, ?) RETURNING wid;";
+		String query = "INSERT INTO wristband (uid, balance, gid, status) VALUES (?, ?, ?, ?) RETURNING wid;";
 		PreparedStatement psm = conn.prepareStatement(query);
-		psm.setBytes(1, wristband.getUid());
+		psm.setBytes(1, wristband.getUid().getBytes());
 		psm.setDouble(2, Utility.INITIAL_BALANCE);
 		psm.setInt(3, -1);
 		psm.setString(4, String.valueOf('I'));

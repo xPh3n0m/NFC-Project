@@ -1,6 +1,7 @@
 package application.model;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import javax.smartcardio.ATR;
 import javax.smartcardio.Card;
@@ -15,7 +16,7 @@ import kw.nfc.communication.Utility;
 public class NFCWristband {
 	
 	private Card card;
-	private byte[] uid;
+	private UID uid;
 	private int wid;
 	private int gid;
 	private double balance;
@@ -34,7 +35,7 @@ public class NFCWristband {
 	 */
 	private NFCWristband(Card card, byte[] uid, int wid, int gid, double balance, char status, boolean readable, boolean valid) {
 		this.card = card;
-		this.uid = uid;
+		this.uid = new UID(uid);
 		this.setWid(wid);
 		this.setGid(gid);
 		this.setBalance(balance);
@@ -106,7 +107,7 @@ public class NFCWristband {
 		}
 	}
 
-	public byte[] getUid() {
+	public UID getUid() {
 		return uid;
 	}
 
@@ -177,5 +178,37 @@ public class NFCWristband {
 		this.valid = valid;
 	}
 
+	public class UID {
+		private byte[] uid;
+		
+		public UID(byte[] uid) {
+			this.uid = uid;
+		}
+		
+		public boolean equals(UID otherUid) {
+			if(otherUid != null) {
+				if(Arrays.equals(uid, otherUid.getBytes())) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public byte[] getBytes() {
+			return uid;
+		}
+		
+		public String toString() {
+			String uidString = "[";
+			for(int i = 0; i < uid.length; i++) {
+				if(i <uid.length-1)
+					uidString += uid[i] + ", ";
+				else
+					uidString += uid[i];
+			}
+			uidString += "]";
+			return uidString;
+		}
+	}
 
 }
