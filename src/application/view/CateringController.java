@@ -64,6 +64,13 @@ public class CateringController implements Initializable {
     private Button loadMenuButton;
     
     @FXML
+    private TextField totalTextField;
+    @FXML
+    private Button orderButton;
+    @FXML
+    private Button cancelButton;
+    
+    @FXML
     private Label errorLabel;
     @FXML
     private Label informationLabel;
@@ -248,6 +255,15 @@ public class CateringController implements Initializable {
 	private void resetTable() {
 		menuItemsData.removeAll(menuItemsData);
 	}
+	
+	public void updateTotal() {
+		double totalPrice = 0.0;
+		for(MenuItem mi : menuItemsData) {
+			totalPrice += mi.getTotalPrice();
+		}
+		
+		totalTextField.setText(totalPrice+"");
+	}
     
     /**
      * Is called by the main application to give a reference back to itself.
@@ -333,6 +349,8 @@ public class CateringController implements Initializable {
 	            		currentPerson.setItemQuantity(currentPerson.getItemQuantity()-1);
 	            	
 	            	currentPerson.setTotalPrice(currentPerson.getItemQuantity()*currentPerson.getItemPrice());
+	            	
+	            	updateTotal();
 	            }
 	        });
 	    }
@@ -363,6 +381,8 @@ public class CateringController implements Initializable {
 	            	currentPerson.setItemQuantity(currentPerson.getItemQuantity()+1);
 	            	
 	            	currentPerson.setTotalPrice(currentPerson.getItemQuantity()*currentPerson.getItemPrice());
+	            	
+	            	updateTotal();
 	            }
 	        });
 	    }

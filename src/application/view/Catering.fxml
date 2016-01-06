@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -32,5 +33,17 @@
             <Label fx:id="errorLabel" layoutX="359.0" layoutY="14.0" text="Error label" />
          </children>
       </AnchorPane>
+      <Label layoutX="47.0" layoutY="366.0" text="TOTAL:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="totalTextField" editable="false" layoutX="135.0" layoutY="358.0" prefHeight="35.0" prefWidth="161.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+      <Button fx:id="orderButton" layoutX="324.0" layoutY="358.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="128.0" text="Order" />
+      <Button fx:id="cancelButton" layoutX="477.0" layoutY="358.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="128.0" text="Cancel" />
    </children>
 </AnchorPane>
