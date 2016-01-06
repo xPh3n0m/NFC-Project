@@ -357,7 +357,7 @@ public class ConnectDB {
 	}
 
 	public ArrayList<MenuItem> getMenuItems(int groupNumber) throws SQLException {
-		String query = "SELECT mu.name, mu.price, mu.description "
+		String query = "SELECT mu.iid, mu.name, mu.price, mu.description "
 				+ "FROM menu_items mu, group_items gi "
 				+ "WHERE ? = gi.gpid AND mu.iid = gi.iid";
 		PreparedStatement psm;
@@ -369,11 +369,12 @@ public class ConnectDB {
 
 		
         while(res.next()) {
+        	int iid = res.getInt("iid");
         	String name = res.getString("name");
         	String description = res.getString("description");
         	double price = res.getDouble("price");
         	
-        	MenuItem mi = new MenuItem(name, description, price);
+        	MenuItem mi = new MenuItem(iid, name, description, price);
         	menuItems.add(mi);
         }
 

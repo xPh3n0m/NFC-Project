@@ -93,6 +93,7 @@ public class CateringController implements Initializable {
 		itemQuantityColumn.setCellValueFactory(cellData -> cellData.getValue().getItemQuantityProperty().asObject());
 		totalPriceColumn.setCellValueFactory(cellData -> cellData.getValue().getTotalPriceProperty().asObject());		
 		
+		createQuantityButtons();
 		cateringGroupNumberTextField.setText("1");
 	}
 
@@ -183,8 +184,8 @@ public class CateringController implements Initializable {
     
     public void loadMenuItems() {
     	int groupNumber = new Integer(cateringGroupNumberTextField.getText());
-
     	LoadMenuItems loadMenu = new LoadMenuItems(connDB, groupNumber);
+    	resetTable();
     	
     	loadMenu.setOnSucceeded(
     			new EventHandler<WorkerStateEvent>() {
@@ -198,7 +199,8 @@ public class CateringController implements Initializable {
     				}
     				menuItemsTable.setItems(menuItemsData);
     				
-    				createQuantityButtons();
+    				_displayErrorMessage("");
+    				_displayInformationMessage("Succesfully loaded menu");
     		    }
     		});
     		
@@ -237,6 +239,14 @@ public class CateringController implements Initializable {
     
 	private void _displayErrorMessage(String string) {
 		errorLabel.setText(string);
+	}
+	
+	private void _displayInformationMessage(String string) {
+		informationLabel.setText(string);
+	}
+	
+	private void resetTable() {
+		menuItemsData.removeAll(menuItemsData);
 	}
     
     /**

@@ -9,13 +9,15 @@ import javafx.beans.property.StringProperty;
 
 public class MenuItem {
 	
+	private int iid;
 	private final StringProperty itemName;
 	private final StringProperty itemDescription;
 	private final DoubleProperty itemPrice;
 	private final IntegerProperty itemQuantity;
 	private final DoubleProperty totalPrice;
 	
-	public MenuItem(String itemName, String itemDescription, double itemPrice) {
+	public MenuItem(int iid, String itemName, String itemDescription, double itemPrice) {
+		this.iid = iid;
 		this.itemName = new SimpleStringProperty(itemName);
 		this.itemDescription = new SimpleStringProperty(itemDescription);
 		this.itemPrice = new SimpleDoubleProperty(itemPrice);
@@ -41,6 +43,10 @@ public class MenuItem {
 	
 	public DoubleProperty getTotalPriceProperty() {
 		return totalPrice;
+	}
+	
+	public int getIid() {
+		return iid;
 	}
 
 	public String getItemName() {
