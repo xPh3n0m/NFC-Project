@@ -21,7 +21,7 @@ import application.model.NFCWristband;
 public class NFCCommunication{
 	
 	private CardTerminal terminal;
-	
+		
 	private String buffer = "";
 	
 	public NFCCommunication() {
@@ -167,16 +167,16 @@ public class NFCCommunication{
 	}
 	
 	public boolean writeDataToNFCCard(String data, NFCWristband card) throws NFCCardException {
-		
-		NFCWristband currentCard;
+		boolean t = true;
+		NFCWristband currentCard = getCurrentNFCCard();
 		
 		try {
-			currentCard = card;
 			// TODO: Add the below in order to verify that the card we are writing on is still the same card
 			//currentCard = getCurrentNFCCard();
 			if(currentCard.uidEquals(card)) {
 				Card c = currentCard.getCard();
 				CardChannel cc = c.getBasicChannel();
+
 				if(data != null) {
 					try {
 						if(_writeData(data, cc)) {

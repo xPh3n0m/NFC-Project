@@ -228,7 +228,7 @@ public class CashHandlerController {
         		    	
         		    	balanceLabel.setText(currentWristband.getBalance() + "");
         		    	informationLabel.setText("Succesfully processed transaction " + transaction.getTransactionId());
-
+        		    	sumTextField.setText("0");
     					}
         		    }
     			);
@@ -244,6 +244,7 @@ public class CashHandlerController {
 			    	}
 			    	
 			    	informationLabel.setText("ERROR in transaction handling");
+    		    	sumTextField.setText("0");
 			    }
 		});
 		
@@ -257,6 +258,7 @@ public class CashHandlerController {
     			    	}
     			    	
     			    	informationLabel.setText("CANCEL in transaction handling");
+        		    	sumTextField.setText("0");
     			    }
 		});
 	

@@ -46,7 +46,6 @@ public class ProcessTransaction extends Service<Transaction>{
             	
             	wristband.setBalance(newBalance);
             	connDB.updateBalance(wristband, newBalance);
-            	
             	nfcComm.writeDataToNFCCard(wristband.getJSONData(), wristband);
             	
             	return t;
