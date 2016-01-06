@@ -15,12 +15,12 @@ public class MenuItem {
 	private final IntegerProperty itemQuantity;
 	private final DoubleProperty totalPrice;
 	
-	public MenuItem(String itemName, String itemDescription, double itemPrice, int itemQuantity, double totalPrice) {
+	public MenuItem(String itemName, String itemDescription, double itemPrice) {
 		this.itemName = new SimpleStringProperty(itemName);
 		this.itemDescription = new SimpleStringProperty(itemDescription);
 		this.itemPrice = new SimpleDoubleProperty(itemPrice);
-		this.itemQuantity = new SimpleIntegerProperty(itemQuantity);
-		this.totalPrice = new SimpleDoubleProperty(totalPrice);
+		this.itemQuantity = new SimpleIntegerProperty(0);
+		this.totalPrice = new SimpleDoubleProperty(0.0);
 	}
 	
 	public StringProperty getItemNameProperty() {

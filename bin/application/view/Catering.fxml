@@ -27,7 +27,9 @@
             <TextField fx:id="cateringGroupNumberTextField" layoutX="153.0" layoutY="10.0" prefHeight="25.0" prefWidth="44.0" />
             <Button fx:id="decreaseGroupNumberButton" layoutX="122.0" layoutY="10.0" mnemonicParsing="false" onAction="#decreaseGroupNumber" prefHeight="25.0" prefWidth="31.0" text="-" />
             <Button fx:id="increaseGroupNumberButton" layoutX="197.0" layoutY="10.0" mnemonicParsing="false" onAction="#increseGroupNumber" prefHeight="25.0" prefWidth="31.0" text="+" />
-            <Button fx:id="loadMenuButton" layoutX="252.0" layoutY="10.0" mnemonicParsing="false" text="Load Menu" />
+            <Button fx:id="loadMenuButton" layoutX="252.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadMenuItems" text="Load Menu" />
+            <Label fx:id="informationLabel" layoutX="15.0" layoutY="44.0" text="Information label" />
+            <Label fx:id="errorLabel" layoutX="359.0" layoutY="14.0" text="Error label" />
          </children>
       </AnchorPane>
    </children>

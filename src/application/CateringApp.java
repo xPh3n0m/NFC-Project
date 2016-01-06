@@ -18,7 +18,6 @@ public class CateringApp extends Application {
 			
     private Stage primaryStage;
     private BorderPane rootLayout;
-    private ConnectDB connDB;
     
 	@Override
 	public void start(Stage primaryStage) {
@@ -44,6 +43,15 @@ public class CateringApp extends Application {
         // Give the controller access to the main app.
         CateringController controller = loader.getController();
         controller.setMainApp(this);
+
+        ConnectDB connDB = new ConnectDB();
+        try {
+			connDB.connect();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(0);
+		}
         controller.setConnDB(connDB);
         
         NFCCommunication nfcComm = new NFCCommunication();

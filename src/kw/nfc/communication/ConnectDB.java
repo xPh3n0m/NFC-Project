@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import application.model.Guest;
+import application.model.MenuItem;
 import application.model.NFCWristband;
 import application.model.Order;
 
@@ -351,5 +354,29 @@ public class ConnectDB {
 		psm.setDouble(1, newBalance);
 		psm.setInt(2, wristband.getWid());
 		psm.executeUpdate();
+	}
+
+	public ArrayList<MenuItem> getMenuItems(int groupNumber) throws SQLException {
+		String query = "SELECT mu.name, mu.price, mu.description "
+				+ "FROM menu_items mu, group_items gi "
+				+ "WHERE ? = gi.gpid AND mu.iid = gi.iid";
+		PreparedStatement psm;
+		ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
+	
+		psm = conn.prepareStatement(query);
+		psm.setInt(1, groupNumber);
+		ResultSet res = psm.executeQuery();
+
+		
+        while(res.next()) {
+        	String name = res.getString("name");
+        	String description = res.getString("description");
+        	double price = res.getDouble("price");
+        	
+        	MenuItem mi = new MenuItem(name, description, price);
+        	menuItems.add(mi);
+        }
+
+        return menuItems;
 	}
 }
