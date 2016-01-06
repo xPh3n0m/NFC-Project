@@ -31,17 +31,18 @@
                   </AnchorPane>
                 <AnchorPane fx:id="guestInformationAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                      <children>
-                        <Button fx:id="activateWristbandButton" layoutX="17.0" layoutY="14.0" mnemonicParsing="false" onAction="#activateWristband" text="Activate Wristband" />
-                        <Button fx:id="deactivateWristbandButton" layoutX="146.0" layoutY="14.0" mnemonicParsing="false" onAction="#deactivateWristband" text="Deactivate Wristband" />
+                        <Button fx:id="activateWristbandButton" layoutX="17.0" layoutY="14.0" mnemonicParsing="false" onAction="#registerGuest" text="Activate Wristband" />
+                        <Button fx:id="deactivateWristbandButton" layoutX="146.0" layoutY="14.0" mnemonicParsing="false" onAction="#unregisterGuest" text="Deactivate Wristband" />
                         <Label layoutX="17.0" layoutY="52.0" text="Guest ID:" />
                         <Label layoutX="17.0" layoutY="97.0" text="First name:" />
                         <Label layoutX="17.0" layoutY="132.0" text="Last name:" />
                         <Label layoutX="17.0" layoutY="167.0" text="Email:" />
                         <TextField fx:id="firstNameTextField" layoutX="86.0" layoutY="93.0" prefHeight="25.0" prefWidth="190.0" />
                         <TextField fx:id="lastNameTextField" layoutX="86.0" layoutY="128.0" prefHeight="25.0" prefWidth="190.0" />
-                        <TextField fx:id="EmailTextField" layoutX="86.0" layoutY="163.0" prefHeight="25.0" prefWidth="190.0" />
-                        <CheckBox fx:id="anonymousCheckbox" layoutX="161.0" layoutY="52.0" mnemonicParsing="false" text="Anonymous?" />
+                        <TextField fx:id="emailTextField" layoutX="86.0" layoutY="163.0" prefHeight="25.0" prefWidth="190.0" />
+                        <CheckBox fx:id="anonymousCheckbox" layoutX="161.0" layoutY="52.0" mnemonicParsing="false" onAction="#anonymize" text="Anonymous?" />
                         <Label fx:id="gidLabel" layoutX="75.0" layoutY="52.0" text="gid label" />
+                        <Button fx:id="updateGuestButton" layoutX="21.0" layoutY="202.0" mnemonicParsing="false" onAction="#updateGuest" text="Update guest" />
                      </children></AnchorPane>
               </items>
             </SplitPane>

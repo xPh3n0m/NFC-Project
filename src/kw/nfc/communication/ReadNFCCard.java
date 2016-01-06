@@ -27,7 +27,7 @@ public class ReadNFCCard extends Service<NFCWristband> {
             	NFCWristband wristband = nfcComm.getCurrentNFCCard();
             	
             	try {
-					NFCWristband dbWristband = connDB.getNFCWristband(wristband.getATR());
+					NFCWristband dbWristband = connDB.getNFCWristband(wristband.getUid());
 					if(dbWristband != null) { // A match has been found in the database
 						if(!dbWristband.equals(wristband)) {
 							nfcComm.writeDBWristbandToNFCWristband(dbWristband);

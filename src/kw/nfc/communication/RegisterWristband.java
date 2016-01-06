@@ -32,8 +32,7 @@ public class RegisterWristband extends Service<NFCWristband> {
             	NFCWristband dbWristband = connDB.newWristband(wristband);
     			
     			// Write the new information on the NFC Wristband
-            	// The wristband is set as recognized if the method returns succesfully
-            	nfcComm.writeDBWristbandToNFCWristband(dbWristband);
+            	nfcComm.writeDataToNFCCard(dbWristband.getJSONData(), dbWristband);
             	
             	return dbWristband;
             }

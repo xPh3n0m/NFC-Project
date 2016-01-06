@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.smartcardio.ATR;
 import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
@@ -65,7 +64,7 @@ public class NFCCommunication{
 				throw new NFCCardException("Unable to connect to the card");
 			}
 		    
-		    ATR atr = newCard.getATR();
+		    byte[] uid = readUid();
 		    String data;
 			try {
 				data = _readDataFromCard(newCard);
@@ -73,7 +72,7 @@ public class NFCCommunication{
 				throw new NFCCardException("Unable to read from the current card");
 			}
 		    
-		    return NFCWristband.nfcWristbandFromWristbandData(newCard, atr, data);
+		    return NFCWristband.nfcWristbandFromWristbandData(newCard, uid, data);
 		    
 		} else {
 			throw new NFCCardException("No NFC Card available");
@@ -139,7 +138,7 @@ public class NFCCommunication{
 				
 		try {
 			currentWristband = getCurrentNFCCard();
-			if(currentWristband.atrEquals(dbWristband)) {
+			if(currentWristband.uidEquals(dbWristband)) {
 				Card c = currentWristband.getCard();
 				CardChannel cc = c.getBasicChannel();
 				
@@ -172,7 +171,9 @@ public class NFCCommunication{
 		NFCWristband currentCard;
 		
 		try {
-			currentCard = getCurrentNFCCard();
+			currentCard = card;
+			// TODO: Add the below in order to verify that the card we are writing on is still the same card
+			//currentCard = getCurrentNFCCard();
 			if(currentCard.equals(card)) {
 				Card c = currentCard.getCard();
 				CardChannel cc = c.getBasicChannel();
@@ -197,6 +198,41 @@ public class NFCCommunication{
 		} catch (NFCCardException e) {
 			throw new NFCCardException("No card available");
 		}
+	}
+	
+	public byte[] readUid() throws NFCCardException {
+		NFCWristband currentWristband;
+		try {
+			currentWristband = getCurrentNFCCard();
+			Card c = currentWristband.getCard();
+			CardChannel cc = c.getBasicChannel();
+			
+			byte[] uid = new byte[7];
+	        
+	        // Read the first 8 bytes
+	        byte[] read8FirstBytesCommand = {(byte) 0xFF, (byte) 0xB0, (byte) 0x00, (byte) 0x00, (byte) 0x08};
+	    	CommandAPDU readData = new CommandAPDU(read8FirstBytesCommand);
+	    	ResponseAPDU responseReadData;
+			try {
+				responseReadData = cc.transmit(readData);
+		    	byte[] firstbytes = responseReadData.getData();
+		    	
+		    	for(int i = 0; i < 3; i++) {
+		    		uid[i] = firstbytes[i];
+		    	}
+		    	for(int i = 4; i < 8; i++) {
+		    		uid[i-1] = firstbytes[i];
+		    	}
+		    	
+		    	return uid;
+			} catch (CardException e) {
+				throw new NFCCardException("Unable to read UID from NFC Card");
+			}
+
+		} catch (NFCCardException e) {
+			throw new NFCCardException("No card available");
+		}
+		
 	}
 		
 	private boolean _writeData(String data, CardChannel cc) throws CardException {

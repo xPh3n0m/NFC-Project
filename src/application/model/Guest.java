@@ -54,19 +54,6 @@ public class Guest {
 		this.gid = gid;
 	}
 
-	/**
-	 * Creates a new guest in the database
-	 * @param name
-	 * @return
-	 * @throws SQLException 
-	 */
-	public static Guest newGuestInDatabase(Guest g, ConnectDB connDB) throws SQLException {
-		int gid = connDB.newGuest(g);
-		g.setGid(gid);
-		
-		return g;
-	}
-
 	public String getFirstName() {
 		return firstName;
 	}

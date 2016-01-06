@@ -31,10 +31,14 @@ public class RegisterGuest extends Service<Guest> {
 		task = new Task<Guest>() {
             @Override
             protected Guest call() throws NFCCardException, SQLException {
+            	// Update the status of the wristband in the database
+            	Guest g = connDB.activateWristband(guest, wristband);
+    			
             	// Write the guest in the database
-    			Guest g = Guest.newGuestInDatabase(guest, connDB);
+    			//Guest g = Guest.newGuestInDatabase(guest, connDB);
     			
     			wristband.setGid(g.getGid());
+            	wristband.setStatus('A');
     			// Write the guest on the wristband
     			nfcComm.writeDataToNFCCard(wristband.getJSONData(), wristband);
             	

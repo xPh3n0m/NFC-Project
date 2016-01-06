@@ -112,15 +112,15 @@ public class ConnectDB {
         return new Order(gid, nBbeers, nbSpirits);
 	}*/
 
-	public int newGuest(Guest g) throws SQLException {
+	public Guest newGuest(Guest g) throws SQLException {
 		String query;
 		PreparedStatement psm;
 		if(g.isAnonymous()) {
-			query = "INSERT INTO guest (anonymous) VALUES (?)";
+			query = "INSERT INTO guest (anonymous) VALUES (?) RETURNING gid ";
 			psm = conn.prepareStatement(query);
 			psm.setBoolean(1, g.isAnonymous());
 		} else {
-			query = "INSERT INTO guest (first_name, last_name, email, anonymous) VALUES (?, ?, ?, ?)";
+			query = "INSERT INTO guest (first_name, last_name, email, anonymous) VALUES (?, ?, ?, ?) RETURNING gid";
 			psm = conn.prepareStatement(query);
 			psm.setString(1, g.getFirstName());
 			psm.setString(2, g.getLastName());
@@ -135,33 +135,40 @@ public class ConnectDB {
         	gid = res.getInt("gid");
         }
 
-        return gid;
-	}
-	/*
-	public Guest getGuestFromDB(int gid) throws SQLException {
-		String query = "SELECT * FROM guest WHERE gid = ?;";
-		PreparedStatement psm = conn.prepareStatement(query);
-		psm.setInt(1, gid);
-		ResultSet res = psm.executeQuery();
-		
-		String name = "";
-		double balance = 0.0;
-		byte[] atr = null;
-		
-        if(res.next()) {
-        	name = res.getString("guest_name");
-        	balance = res.getDouble("balance");
-        	atr = res.getBytes("ATR");
-        } else {
-        	return null;
-        }
-        
-
-        Guest g = Guest.newGuestForUpdate(gid, name, balance,
-        		new NFCWristband(new ATR(atr)), this);
-
+        g.setGid(gid);
         return g;
-	}*/
+	}
+	
+	public Guest getGuest(int gid) {
+		String query = "SELECT * FROM guest WHERE gid = ?;";
+		PreparedStatement psm;
+		try {
+			psm = conn.prepareStatement(query);
+			psm.setInt(1, gid);
+			ResultSet res = psm.executeQuery();
+			
+			String firstName = "";
+			String lastName = "";
+			String email = "";
+			boolean anonymous = false;
+			
+	        if(res.next()) {
+	        	anonymous = res.getBoolean("anonymous");
+	        	if(!anonymous) {
+		        	firstName = res.getString("first_name");
+		        	lastName = res.getString("last_name");
+		        	email = res.getString("email");
+		        	return new Guest(gid, firstName, lastName, email);
+	        	} else {
+	        		return new Guest(gid);
+	        	}
+	        } else {
+	        	return null;
+	        }
+		} catch (SQLException e) {
+			return null;
+		}
+	}
 	
 	/*
 	public void setGuestBalance(int gid, double newBalance) {
@@ -199,16 +206,25 @@ public class ConnectDB {
 		return currentBalance;
 	}
 
-	public void updateGuest(int gid, String name, double balance, NFCWristband card, String status) throws SQLException {
-		String query = "UPDATE guest SET guest_name = ?, balance = ?, ATR = ?, status = ? WHERE gid = ?;";
-		
+	public void updateGuest(Guest g) throws SQLException {
+		String query = "UPDATE guest SET first_name = ?, last_name = ?, email = ?, anonymous = ? WHERE gid = ?;";
 		PreparedStatement psm = conn.prepareStatement(query);
-		psm.setString(1, name);
-		psm.setDouble(2, balance);
-		psm.setString(3, card.getATR().toString());
-		psm.setString(4, status);
-		psm.setInt(5, gid);
-		psm.executeUpdate();
+
+		if(g.isAnonymous()) {
+			psm.setString(1, "");
+			psm.setString(2, "");
+			psm.setString(3, "");
+			psm.setBoolean(4, g.isAnonymous());
+			psm.setInt(5, g.getGid());
+		} else {
+			psm.setString(1, g.getFirstName());
+			psm.setString(2, g.getLastName());
+			psm.setString(3, g.getEmail());
+			psm.setBoolean(4, g.isAnonymous());
+			psm.setInt(5, g.getGid());
+		}
+		
+		psm.executeUpdate();		
 	}
 
 	public int newTransaction(int gid, double balance, double amount) throws SQLException {
@@ -249,7 +265,7 @@ public class ConnectDB {
 	public NFCWristband newWristband(NFCWristband wristband) throws SQLException {
 		String query = "INSERT INTO wristband (atr, balance, gid, status) VALUES (?, ?, ?, ?) RETURNING wid;";
 		PreparedStatement psm = conn.prepareStatement(query);
-		psm.setBytes(1, wristband.getATR().getBytes());
+		psm.setBytes(1, wristband.getUid());
 		psm.setDouble(2, Utility.INITIAL_BALANCE);
 		psm.setInt(3, -1);
 		psm.setString(4, String.valueOf('I'));
@@ -281,11 +297,11 @@ public class ConnectDB {
 		//TODO: What to do if an SQL Exception is thrown?
 	}
 
-	public NFCWristband getNFCWristband(ATR atr) throws SQLException {
+	public NFCWristband getNFCWristband(byte[] uid) throws SQLException {
 		// TODO Auto-generated method stub
-			String query = "SELECT * FROM wristband WHERE atr = ?;";
+			String query = "SELECT * FROM wristband WHERE uid = ?;";
 			PreparedStatement psm = conn.prepareStatement(query);
-			psm.setBytes(1, atr.getBytes());
+			psm.setBytes(1, uid);
 			ResultSet res = psm.executeQuery();
 			
 			int wid = -1;
@@ -299,28 +315,34 @@ public class ConnectDB {
 	        	status = res.getString("status").charAt(0);
 	        	balance = res.getDouble("balance");
 	        	
-		        NFCWristband wristband = NFCWristband.nfcWristbandFromDB(wid, gid, status, balance, atr);
+		        NFCWristband wristband = NFCWristband.nfcWristbandFromDB(wid, gid, status, balance, uid);
 		        return wristband;
 	        }
 	        
 	        return null;
 	}
 
-	public void activateWristband(NFCWristband wristband) throws SQLException {
-		String query = "UPDATE wristband SET status = ? WHERE wid = ?;";
+	public Guest activateWristband(Guest g, NFCWristband wristband) throws SQLException {
+		Guest guest = newGuest(g);
+		
+		String query = "UPDATE wristband SET status = ?, gid = ? WHERE wid = ?;";
 		
 		PreparedStatement psm = conn.prepareStatement(query);
 		psm.setString(1, "A");
-		psm.setInt(2, wristband.getWid());
+		psm.setInt(2, guest.getGid());
+		psm.setInt(3, wristband.getWid());
 		psm.executeUpdate();
+		
+		return guest;
 	}
 
 	public void deactivateWristband(NFCWristband wristband) throws SQLException {
-		String query = "UPDATE wristband SET status = ? WHERE wid = ?;";
+		String query = "UPDATE wristband SET status = ?, gid = ? WHERE wid = ?;";
 		
 		PreparedStatement psm = conn.prepareStatement(query);
 		psm.setString(1, "I");
-		psm.setInt(2, wristband.getWid());
+		psm.setInt(2, -1);
+		psm.setInt(3, wristband.getWid());
 		psm.executeUpdate();
 	}
 

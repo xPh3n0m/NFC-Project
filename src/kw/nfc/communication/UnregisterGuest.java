@@ -7,33 +7,36 @@ import application.model.NFCWristband;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class UnregisterGuest extends Service<Guest> {
+public class UnregisterGuest extends Service<NFCWristband> {
 
 	private NFCCommunication nfcComm;
-	private Task<Guest> task;
+	private Task<NFCWristband> task;
 	private Guest guest;
-	private NFCWristband card;
+	private NFCWristband wristband;
 	
 	private ConnectDB connDB;
 	
-	public UnregisterGuest(Guest g, NFCCommunication nfcComm, NFCWristband card, ConnectDB connDB) {
-		this.guest = g;
+	public UnregisterGuest(NFCCommunication nfcComm, NFCWristband card, ConnectDB connDB) {
 		this.nfcComm = nfcComm;
 		this.connDB = connDB;
-		this.card = card;
+		this.wristband = card;
 	}
 
 	@Override
-	protected Task<Guest> createTask() {
-		task = new Task<Guest>() {
+	protected Task<NFCWristband> createTask() {
+		task = new Task<NFCWristband>() {
             @Override
-            protected Guest call() throws NFCCardException, SQLException {
-            	// Erases the data on the wristband and changes the status of the current guest
-            	nfcComm.eraseDataFromWristband(card);
+            protected NFCWristband call() throws NFCCardException, SQLException {
+            	// Update the status of the wristband in the database
+            	connDB.deactivateWristband(wristband);
+    			
+    			// Write the new information on the NFC Wristband
+            	// The wristband is set as recognized if the method returns succesfully
+            	wristband.setStatus('I');
+            	wristband.setGid(-1);
+            	nfcComm.writeDBWristbandToNFCWristband(wristband);
             	
-            	guest.updateDatabase();
-            	
-            	return guest;
+            	return wristband;
             }
 		};
 		return task;

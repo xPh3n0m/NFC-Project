@@ -14,14 +14,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import kw.nfc.communication.ActivateWristband;
 import kw.nfc.communication.ConnectDB;
 import kw.nfc.communication.DeactivateWristband;
 import kw.nfc.communication.NFCCommunication;
 import kw.nfc.communication.ReadNFCCard;
 import kw.nfc.communication.RegisterGuest;
 import kw.nfc.communication.RegisterWristband;
+import kw.nfc.communication.UnregisterGuest;
 import kw.nfc.communication.UnregisterWristband;
+import kw.nfc.communication.UpdateGuest;
 import kw.nfc.communication.Utility;
 
 public class WristbandRegistrationController {
@@ -61,6 +62,8 @@ public class WristbandRegistrationController {
     private TextField lastNameTextField;
     @FXML
     private TextField emailTextField;
+    @FXML
+    private Button updateGuestButton;
     
     
     private ConnectDB connDB;
@@ -93,6 +96,9 @@ public class WristbandRegistrationController {
     	activateWristbandButton.setVisible(false);
     	deactivateWristbandButton.setVisible(false);
     	_hideGuestPanel();
+    	deactivateWristbandButton.setVisible(false);
+    	activateWristbandButton.setVisible(false);
+    	updateGuestButton.setVisible(false);
     }
     
 	public void startReadingNFCCards() {
@@ -134,10 +140,10 @@ public class WristbandRegistrationController {
     		    		// TODO: Do something here, no value has been returned
     		    		System.exit(0);
     		    	}
-    		    	if(!wristband.atrEquals(currentWristband)) { // A new wristband has been placed, we must read again
+    		    	if(!wristband.uidEquals(currentWristband)) { // A new wristband has been placed, we must read again
     		    		currentWristband = wristband;
     		    		if(!wristband.isValid()) { // The wristband is not valid, it must be registered before continuing
-        		    		_fillWristbandInformationLabels("", wristband.getATR().getBytes().toString(), "","");
+        		    		_fillWristbandInformationLabels("", wristband.getUid().toString(), "","");
         		    		_displayInformationMessage("This wristband been recognized. "
         		    				+ "But is not part of the database. Please register it");
         		    		
@@ -147,7 +153,7 @@ public class WristbandRegistrationController {
             		    	deactivateWristbandButton.setVisible(false);
             		    	_hideGuestPanel();
     		    		} else { // The wristband is in the database. If we arrived here, the NFC wristband has been updated with corect info
-        		    		_fillWristbandInformationLabels(wristband.getWid() + "", wristband.getATR().getBytes().toString(),
+        		    		_fillWristbandInformationLabels(wristband.getWid() + "", wristband.getUid().toString(),
     	    		    			wristband.getStatus() + "",wristband.getBalance() + "");
 
         		    		// Check the status of the wristband
@@ -158,7 +164,12 @@ public class WristbandRegistrationController {
 	            		    		unregisterWristbandButton.setVisible(true);
 	                		    	activateWristbandButton.setVisible(false);
 	                		    	deactivateWristbandButton.setVisible(true);
+	                		    	updateGuestButton.setVisible(true);
 	                		    	_showGuestPanel();
+	                		    	Guest g = connDB.getGuest(wristband.getGid());
+	                		    	if(g != null) {
+	                		    		_fillGuestInformationFields(g);
+	                		    	}
 	            		    		break;
 	        		    		case 'I':
 	        		    			_displayInformationMessage("The wristband has been recognized, but it is inactive."
@@ -240,12 +251,13 @@ public class WristbandRegistrationController {
     		    	currentWristband = wristband;
         		    if(wristband.isReadable()) {
         		    	_displayInformationMessage("Succesfully registered wristband");
-    		    		_fillWristbandInformationLabels(wristband.getWid() + "", wristband.getATR().toString(),
+    		    		_fillWristbandInformationLabels(wristband.getWid() + "", wristband.getUid().toString(),
 	    		    			wristband.getStatus() + "",wristband.getBalance() + "");
     		    		unregisterWristbandButton.setVisible(true);
     		    		registerWristbandButton.setVisible(false);
         		    	activateWristbandButton.setVisible(true);
         		    	deactivateWristbandButton.setVisible(false);
+        		    	updateGuestButton.setVisible(true);
     		    		_resetErrorFields();
         		    	_showGuestPanel();
         		    } else {
@@ -299,11 +311,12 @@ public class WristbandRegistrationController {
     		    	NFCWristband wristband = (NFCWristband) t.getSource().getValue();
     		    	currentWristband = wristband;
         		    _displayInformationMessage("Succesfully unregistered wristband");
-    		    	_fillWristbandInformationLabels("", wristband.getATR().getBytes().toString(),"","");
+    		    	_fillWristbandInformationLabels("", wristband.getUid().toString(),"","");
     		    	unregisterWristbandButton.setVisible(false);
     		    	registerWristbandButton.setVisible(true);
     		    	activateWristbandButton.setVisible(false);
     		    	deactivateWristbandButton.setVisible(false);
+    		    	updateGuestButton.setVisible(false);
     		    	_resetErrorFields();
     		    	_hideGuestPanel();
     		    }
@@ -338,64 +351,11 @@ public class WristbandRegistrationController {
     	unregisterWristband.start();
     }
     
-    public void activateWristband() {
-    	ActivateWristband activateWristband = new ActivateWristband(nfcComm, currentWristband, connDB);
-    	
-    	activateWristband.setOnSucceeded(
-    			new EventHandler<WorkerStateEvent>() {
-
-    		    @Override
-    		    public void handle(WorkerStateEvent t) {
-    		    	NFCWristband wristband = (NFCWristband) t.getSource().getValue();
-    		    	currentWristband = wristband;
-        		    _displayInformationMessage("Succesfully activated wristband");
-    		    	_fillWristbandInformationLabels(wristband.getWid()+"", wristband.getATR().getBytes().toString()
-    		    			,wristband.getStatus()+"",wristband.getBalance()+"");
-    		    	
-    		    	unregisterWristbandButton.setVisible(true);
-    		    	registerWristbandButton.setVisible(false);
-    		    	activateWristbandButton.setVisible(false);
-    		    	deactivateWristbandButton.setVisible(true);
-    		    	
-    		    	_resetErrorFields();
-    		    	_showGuestPanel();
-    		    }
-    		});
-    	
-    	activateWristband.setOnFailed(
-				new EventHandler<WorkerStateEvent>() {
-					
-			    @Override
-			    public void handle(WorkerStateEvent t) {
-			    	if(t.getSource().getException() != null) {
-			    		_displayErrorMessage(t.getSource().getException().getMessage());
-			    	} else {
-			    		_displayErrorMessage("Unrecognized error");
-			    	}
-			    }
-		});
-		
-    	activateWristband.setOnCancelled(
-				new EventHandler<WorkerStateEvent>() {
-
-			    @Override
-			    public void handle(WorkerStateEvent t) {
-			    	if(t.getSource().getException() != null) {
-			    		_displayErrorMessage(t.getSource().getException().getMessage());
-			    	} else {
-			    		_displayErrorMessage("Unrecognized error");
-			    	}
-			    }
-		});
-	
-    	activateWristband.start();
-    }
     
-    
-    public void deactivateWristband() {
-    	DeactivateWristband deactivateWristband = new DeactivateWristband(nfcComm, currentWristband, connDB);
+    public void unregisterGuest() {
+    	UnregisterGuest unregisterGuest = new UnregisterGuest(nfcComm, currentWristband, connDB);
     	
-    	deactivateWristband.setOnSucceeded(
+    	unregisterGuest.setOnSucceeded(
     			new EventHandler<WorkerStateEvent>() {
 
     		    @Override
@@ -403,20 +363,23 @@ public class WristbandRegistrationController {
     		    	NFCWristband wristband = (NFCWristband) t.getSource().getValue();
     		    	currentWristband = wristband;
         		    _displayInformationMessage("Succesfully deactivated wristband");
-    		    	_fillWristbandInformationLabels(wristband.getWid()+"", wristband.getATR().getBytes().toString()
+    		    	_fillWristbandInformationLabels(wristband.getWid()+"", wristband.getUid().toString()
     		    			,wristband.getStatus()+"",wristband.getBalance()+"");
     		    	
     		    	unregisterWristbandButton.setVisible(true);
     		    	registerWristbandButton.setVisible(false);
     		    	activateWristbandButton.setVisible(true);
     		    	deactivateWristbandButton.setVisible(false);
-    		    	
+    		    	updateGuestButton.setVisible(false);
+
     		    	_resetErrorFields();
+    		    	_resetGuestFields();
     		    	_showGuestPanel();
+    		    	gidLabel.setText("");
     		    }
     		});
     	
-    	deactivateWristband.setOnFailed(
+    	unregisterGuest.setOnFailed(
 				new EventHandler<WorkerStateEvent>() {
 					
 			    @Override
@@ -429,7 +392,7 @@ public class WristbandRegistrationController {
 			    }
 		});
 		
-    	deactivateWristband.setOnCancelled(
+    	unregisterGuest.setOnCancelled(
 				new EventHandler<WorkerStateEvent>() {
 
 			    @Override
@@ -442,16 +405,12 @@ public class WristbandRegistrationController {
 			    }
 		});
 	
-    	deactivateWristband.start();
+    	unregisterGuest.start();
     }
     
     public void registerGuest() {
-    	Guest guest;
-    	if(anonymousCheckbox.isSelected()) {
-    		guest = new Guest(-1);
-    	} else {
-    		guest = new Guest(-1, firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText());
-    	}
+    	Guest guest = _getCurrentGuest();
+    	
     	RegisterGuest registerGuest = new RegisterGuest(connDB, nfcComm, guest, currentWristband);
     	
     	registerGuest.setOnSucceeded(
@@ -460,15 +419,18 @@ public class WristbandRegistrationController {
     		    @Override
     		    public void handle(WorkerStateEvent t) {
     		    	Guest g = (Guest) t.getSource().getValue();
-
-    		    	_displayInformationMessage("Succesfully updated guest");
     		    	_fillGuestInformationFields(g);
+        		    _displayInformationMessage("Succesfully registered guest");
+    		    	
+    		    	unregisterWristbandButton.setVisible(true);
+    		    	registerWristbandButton.setVisible(false);
+    		    	_resetErrorFields();
+    		    	_showGuestPanel();
 
     		    	activateWristbandButton.setVisible(false);
     		    	deactivateWristbandButton.setVisible(true);
-    		    	
-    		    	_resetErrorFields();
-    		    	_showGuestPanel();
+    		    	updateGuestButton.setVisible(true);
+
     		    }
     		});
     	
@@ -499,6 +461,89 @@ public class WristbandRegistrationController {
 		});
 	
     	registerGuest.start();
+    }
+    
+    public void updateGuest() {
+    	Guest guest = _getCurrentGuest();
+    	guest.setGid(currentWristband.getGid());
+    	UpdateGuest updateGuest = new UpdateGuest(guest, connDB);
+    	
+    	updateGuest.setOnSucceeded(
+    			new EventHandler<WorkerStateEvent>() {
+
+    		    @Override
+    		    public void handle(WorkerStateEvent t) {
+    		    	Guest g = (Guest) t.getSource().getValue();
+    		    	_fillGuestInformationFields(g);
+        		    _displayInformationMessage("Succesfully updated guest");
+    		    	
+    		    	unregisterWristbandButton.setVisible(true);
+    		    	registerWristbandButton.setVisible(false);
+    		    	_resetErrorFields();
+    		    	_showGuestPanel();
+
+    		    	activateWristbandButton.setVisible(false);
+    		    	deactivateWristbandButton.setVisible(true);
+    		    }
+    		});
+    	
+    	updateGuest.setOnFailed(
+				new EventHandler<WorkerStateEvent>() {
+					
+			    @Override
+			    public void handle(WorkerStateEvent t) {
+			    	if(t.getSource().getException() != null) {
+			    		_displayErrorMessage(t.getSource().getException().getMessage());
+			    	} else {
+			    		_displayErrorMessage("Unrecognized error");
+			    	}
+			    }
+		});
+		
+    	updateGuest.setOnCancelled(
+				new EventHandler<WorkerStateEvent>() {
+
+			    @Override
+			    public void handle(WorkerStateEvent t) {
+			    	if(t.getSource().getException() != null) {
+			    		_displayErrorMessage(t.getSource().getException().getMessage());
+			    	} else {
+			    		_displayErrorMessage("Unrecognized error");
+			    	}
+			    }
+		});
+	
+    	updateGuest.start();
+    }
+    
+    public void anonymize() {
+    	if(anonymousCheckbox.isSelected()) {
+    		_resetGuestFields();
+    		firstNameTextField.setDisable(true);
+    		lastNameTextField.setDisable(true);
+    		emailTextField.setDisable(true);
+    	} else {
+    		firstNameTextField.setDisable(false);
+    		lastNameTextField.setDisable(false);
+    		emailTextField.setDisable(false);
+    	}
+    }
+    
+    private Guest _getCurrentGuest() {
+    	Guest guest;
+    	if(anonymousCheckbox.isSelected()) {
+    		guest = new Guest(-1);
+    	} else {
+    		guest = new Guest(-1, firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText());
+    	}
+    	
+    	return guest;
+    }
+    
+    private void _resetGuestFields() {
+		firstNameTextField.setText("");
+		lastNameTextField.setText("");
+		emailTextField.setText("");
     }
     
     private void _fillWristbandInformationLabels(String wid, String atr, String status, String balance) {

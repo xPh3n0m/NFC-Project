@@ -15,7 +15,7 @@ import kw.nfc.communication.Utility;
 public class NFCWristband {
 	
 	private Card card;
-	private ATR atr;
+	private byte[] uid;
 	private int wid;
 	private int gid;
 	private double balance;
@@ -32,9 +32,9 @@ public class NFCWristband {
 	 * @param balance
 	 * @param status
 	 */
-	private NFCWristband(Card card, ATR atr, int wid, int gid, double balance, char status, boolean readable, boolean valid) {
+	private NFCWristband(Card card, byte[] uid, int wid, int gid, double balance, char status, boolean readable, boolean valid) {
 		this.card = card;
-		this.atr = atr;
+		this.uid = uid;
 		this.setWid(wid);
 		this.setGid(gid);
 		this.setBalance(balance);
@@ -48,18 +48,18 @@ public class NFCWristband {
 	 * @param card
 	 * @param atr
 	 */
-	private NFCWristband(Card card, ATR atr) {
-		this(card, atr, -1, -1, Utility.INITIAL_BALANCE, 'I', false, false);
+	private NFCWristband(Card card, byte[] uid) {
+		this(card, uid, -1, -1, Utility.INITIAL_BALANCE, 'I', false, false);
 	}
 	
-	public static NFCWristband nfcWristbandFromWristbandData(Card card, ATR atr, String jsonString) {
+	public static NFCWristband nfcWristbandFromWristbandData(Card card, byte[] uid, String jsonString) {
 		JSONParser parser=new JSONParser();
 		JSONObject wristbandJSON;
 		
 		try {
 		wristbandJSON = (JSONObject) parser.parse(jsonString);
 		} catch (ParseException e) {
-			return new NFCWristband(card, atr);
+			return new NFCWristband(card, uid);
 		}
 		
 		if(wristbandJSON.containsKey("wid") 
@@ -73,18 +73,18 @@ public class NFCWristband {
 			double balance = (double) wristbandJSON.get("balance");
 			char status = ((String) wristbandJSON.get("status")).charAt(0);
 
-			return new NFCWristband(card, atr, (int) wid, (int) gid, balance, status, true, false);
+			return new NFCWristband(card, uid, (int) wid, (int) gid, balance, status, true, false);
 		} else {
-			return new NFCWristband(card, atr);
+			return new NFCWristband(card, uid);
 		}
 	}
 	
-	public boolean atrEquals(NFCWristband otherCard) {
+	public boolean uidEquals(NFCWristband otherCard) {
 		if(otherCard == null) {
 			return false;
 		}
 		
-		if(atr.equals(otherCard.getATR())) {
+		if(uid.equals(otherCard.getUid())) {
 			return true;
 		} else {
 			return false;
@@ -92,7 +92,7 @@ public class NFCWristband {
 	}
 	
 	public boolean equals(NFCWristband otherCard) throws NFCCardException {
-		if(otherCard == null || !(atr.equals(otherCard.getATR()))) {
+		if(otherCard == null || !(uid.equals(otherCard.getUid()))) {
 			throw new NFCCardException("The card has been changed");
 		}
 		
@@ -106,8 +106,8 @@ public class NFCWristband {
 		}
 	}
 
-	public ATR getATR() {
-		return atr;
+	public byte[] getUid() {
+		return uid;
 	}
 
 	public Card getCard() {
@@ -165,8 +165,8 @@ public class NFCWristband {
 		return j.toJSONString();
 	}
 
-	public static NFCWristband nfcWristbandFromDB(int wid2, int gid2, char status2, double balance2, ATR atr2) {
-		return new NFCWristband(null, atr2, wid2, gid2, balance2, status2, false, true);
+	public static NFCWristband nfcWristbandFromDB(int wid2, int gid2, char status2, double balance2, byte[] uid2) {
+		return new NFCWristband(null, uid2, wid2, gid2, balance2, status2, false, true);
 	}
 
 	public boolean isValid() {
