@@ -121,9 +121,12 @@ public class CateringController implements Initializable {
 		itemQuantityColumn.setCellValueFactory(cellData -> cellData.getValue().getItemQuantityProperty().asObject());
 		totalPriceColumn.setCellValueFactory(cellData -> cellData.getValue().getTotalPriceProperty().asObject());		
 		
+		menuItemsTable.setColumnResizePolicy((param) -> true );
+
 		createQuantityButtons();
 		cateringGroupNumberTextField.setText("1");
 		resetTotal();
+		resetAllErrorInfomationFields();
 	}
 
 	public void startReadingNFCCards() {
@@ -158,8 +161,7 @@ public class CateringController implements Initializable {
     		    			gidLabel.setText(wristband.getGid()+"");
     		    			widLabel.setText(wristband.getWid()+"");
     		    			balanceLabel.setText(wristband.getBalance()+"");
-    		    			wristbandInfoLabel.setText("");
-    		    			wristbandErrorLabel.setText("");
+    		    			resetAllErrorInfomationFields();
     		    			orderButton.setDisable(false);
     		    		} else {
     		    			wristbandInfoLabel.setText("This wristband is not registered. Please register before");  
@@ -228,7 +230,7 @@ public class CateringController implements Initializable {
         		    @Override
         		    public void handle(WorkerStateEvent t) {
         		    	Transaction transaction = (Transaction) t.getSource().getValue();
-        		    	
+        		    	resetAllErrorInfomationFields();
         		    	balanceLabel.setText(currentWristband.getBalance() + "");
         		    	informationOrderLabel.setText("Succesfully processed transaction " + transaction.getTransactionId());
         		    	resetTotal();
@@ -244,10 +246,9 @@ public class CateringController implements Initializable {
 			    public void handle(WorkerStateEvent t) {
 			    	
 			    	if(t.getSource().getException() != null) {
-			    		errorLabel.setText(t.getSource().getException().getMessage());
+			    		errorOrderLabel.setText(t.getSource().getException().getMessage());
 			    	}
 			    	
-			    	informationOrderLabel.setText("Unsufficient funds");
 			    }
 		});
 		
@@ -257,10 +258,9 @@ public class CateringController implements Initializable {
 					@Override
     			    public void handle(WorkerStateEvent t) {
     			    	if(t.getSource().getException() != null) {
-    			    		errorLabel.setText(t.getSource().getException().getMessage());
+    			    		errorOrderLabel.setText(t.getSource().getException().getMessage());
     			    	}
     			    	
-    			    	informationOrderLabel.setText("CANCEL in transaction handling");
 					}
 		});
 	
@@ -298,7 +298,6 @@ public class CateringController implements Initializable {
     					menuItemsData.add(mi);
     				}
     				menuItemsTable.setItems(menuItemsData);
-    				
     				_displayErrorMessage("");
     				_displayInformationMessage("Succesfully loaded menu");
     		    }
@@ -347,6 +346,15 @@ public class CateringController implements Initializable {
 	
 	private void resetTable() {
 		menuItemsData.removeAll(menuItemsData);
+	}
+	
+	private void resetAllErrorInfomationFields() {
+		errorLabel.setText("");
+		informationLabel.setText("");
+		informationOrderLabel.setText("");
+		errorOrderLabel.setText("");
+		wristbandErrorLabel.setText("");
+		wristbandInfoLabel.setText("");
 	}
 	
 	public void updateTotal() {

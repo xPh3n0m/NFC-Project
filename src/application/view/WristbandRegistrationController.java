@@ -138,6 +138,7 @@ public class WristbandRegistrationController {
     		    		// TODO: Do something here, no value has been returned
     		    		System.exit(0);
     		    	}
+    		    	_displayErrorMessage("");
     		    	if(!wristband.uidEquals(currentWristband)) { // A new wristband has been placed, we must read again
     		    		currentWristband = wristband;
     		    		if(!wristband.isValid()) { // The wristband is not valid, it must be registered before continuing
@@ -247,25 +248,16 @@ public class WristbandRegistrationController {
     		    public void handle(WorkerStateEvent t) {
     		    	NFCWristband wristband = (NFCWristband) t.getSource().getValue();
     		    	currentWristband = wristband;
-        		    if(wristband.isReadable()) {
-        		    	_displayInformationMessage("Succesfully registered wristband");
-    		    		_fillWristbandInformationLabels(wristband.getWid() + "", wristband.getUid().toString(),
-	    		    			wristband.getStatus() + "",wristband.getBalance() + "");
-    		    		unregisterWristbandButton.setVisible(true);
-    		    		registerWristbandButton.setVisible(false);
-        		    	activateWristbandButton.setVisible(true);
-        		    	deactivateWristbandButton.setVisible(false);
-        		    	updateGuestButton.setVisible(true);
-    		    		_resetErrorFields();
-        		    	_showGuestPanel();
-        		    } else {
-    		    		_displayInformationMessage("There was a problem registering the wristband. Please try again");
-    		    		_displayErrorMessage("");
-    		    		registerWristbandButton.setVisible(true);
-        		    	activateWristbandButton.setVisible(false);
-        		    	deactivateWristbandButton.setVisible(false);
-        		    	_hideGuestPanel();
-    		    	}
+    		    	_displayInformationMessage("Succesfully registered wristband");
+		    		_fillWristbandInformationLabels(wristband.getWid() + "", wristband.getUid().toString(),
+    		    			wristband.getStatus() + "",wristband.getBalance() + "");
+		    		unregisterWristbandButton.setVisible(true);
+		    		registerWristbandButton.setVisible(false);
+    		    	activateWristbandButton.setVisible(true);
+    		    	deactivateWristbandButton.setVisible(false);
+    		    	updateGuestButton.setVisible(true);
+		    		_resetErrorFields();
+    		    	_showGuestPanel();
     		    }
     		});
     	
@@ -408,7 +400,10 @@ public class WristbandRegistrationController {
     
     public void registerGuest() {
     	Guest guest = _getCurrentGuest();
-    	
+    	if(guest == null) {
+    		_displayInformationMessage("Please fill in all the fields, or check anonymous");
+    		return;
+    	}
     	RegisterGuest registerGuest = new RegisterGuest(connDB, nfcComm, guest, currentWristband);
     	
     	registerGuest.setOnSucceeded(
@@ -424,7 +419,7 @@ public class WristbandRegistrationController {
     		    	registerWristbandButton.setVisible(false);
     		    	_resetErrorFields();
     		    	_showGuestPanel();
-
+    		    	
     		    	activateWristbandButton.setVisible(false);
     		    	deactivateWristbandButton.setVisible(true);
     		    	updateGuestButton.setVisible(true);
@@ -463,6 +458,10 @@ public class WristbandRegistrationController {
     
     public void updateGuest() {
     	Guest guest = _getCurrentGuest();
+    	if(guest == null) {
+    		_displayInformationMessage("Please fill in all the fields, or check anonymous");
+    		return;
+    	}
     	guest.setGid(currentWristband.getGid());
     	UpdateGuest updateGuest = new UpdateGuest(guest, connDB);
     	
@@ -532,10 +531,22 @@ public class WristbandRegistrationController {
     	if(anonymousCheckbox.isSelected()) {
     		guest = new Guest(-1);
     	} else {
-    		guest = new Guest(-1, firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText());
+    		if(_guestIsValid()) {
+    			guest = new Guest(-1, firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText());
+    		} else {
+    			return null;
+    		}
     	}
     	
     	return guest;
+    }
+    
+    private boolean _guestIsValid() {
+    	if(firstNameTextField.getText().equals("") 
+    			|| lastNameTextField.getText().equals("")
+    			|| emailTextField.getText().equals(""))
+    		return false;
+    	return true;
     }
     
     private void _resetGuestFields() {
@@ -602,7 +613,6 @@ public class WristbandRegistrationController {
     }
     
     private void _displayErrorMessage(String errorMessage) {
-    	_resetAllFields();
     	errorLabel.setText(errorMessage);
     }
     

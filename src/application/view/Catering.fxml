@@ -7,58 +7,130 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="application.view.CateringController">
+<AnchorPane prefHeight="711.0" prefWidth="1296.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="application.view.CateringController">
    <children>
-      <AnchorPane layoutX="47.0" layoutY="116.0" prefHeight="231.0" prefWidth="900.0">
+      <AnchorPane layoutX="55.0" layoutY="198.0" prefHeight="231.0" prefWidth="1196.0">
          <children>
             <TableView fx:id="menuItemsTable" prefHeight="231.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn fx:id="itemNameColumn" prefWidth="75.0" text="Item name" />
-                <TableColumn fx:id="itemDescriptionColumn" prefWidth="75.0" text="Description" />
-                  <TableColumn fx:id="itemPriceColumn" prefWidth="75.0" text="Unit Price (CHF)" />
-                  <TableColumn fx:id="itemQuantityColumn" prefWidth="75.0" text="Quantity" />
-                  <TableColumn fx:id="totalPriceColumn" prefWidth="75.0" text="Price" />
+                <TableColumn fx:id="itemNameColumn" minWidth="300.0" prefWidth="-1.0" text="Item name" />
+                <TableColumn fx:id="itemDescriptionColumn" minWidth="400.0" prefWidth="-1.0" text="Description" />
+                  <TableColumn fx:id="itemPriceColumn" minWidth="100.0" prefWidth="-1.0" text="Unit Price (CHF)" />
+                  <TableColumn fx:id="itemQuantityColumn" minWidth="100.0" prefWidth="-1.0" text="Quantity" />
+                  <TableColumn fx:id="totalPriceColumn" minWidth="100.0" prefWidth="-1.0" text="Price" />
               </columns>
             </TableView>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="47.0" layoutY="24.0" prefHeight="76.0" prefWidth="900.0">
+      <AnchorPane layoutX="47.0" layoutY="24.0" prefHeight="82.0" prefWidth="1232.0">
          <children>
-            <Label layoutX="14.0" layoutY="14.0" text="Catering group #:" />
-            <TextField fx:id="cateringGroupNumberTextField" layoutX="153.0" layoutY="10.0" prefHeight="25.0" prefWidth="44.0" />
-            <Button fx:id="decreaseGroupNumberButton" layoutX="122.0" layoutY="10.0" mnemonicParsing="false" onAction="#decreaseGroupNumber" prefHeight="25.0" prefWidth="31.0" text="-" />
-            <Button fx:id="increaseGroupNumberButton" layoutX="197.0" layoutY="10.0" mnemonicParsing="false" onAction="#increseGroupNumber" prefHeight="25.0" prefWidth="31.0" text="+" />
-            <Button fx:id="loadMenuButton" layoutX="252.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadMenuItems" text="Load Menu" />
-            <Label fx:id="informationLabel" layoutX="15.0" layoutY="44.0" text="Information label" />
-            <Label fx:id="errorLabel" layoutX="359.0" layoutY="14.0" text="Error label" />
+            <Label layoutX="14.0" layoutY="23.0" text="Catering group #:">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="cateringGroupNumberTextField" alignment="CENTER" editable="false" layoutX="314.0" layoutY="5.0" prefHeight="72.0" prefWidth="100.0">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </TextField>
+            <Button fx:id="decreaseGroupNumberButton" layoutX="246.0" layoutY="5.0" mnemonicParsing="false" onAction="#decreaseGroupNumber" prefHeight="72.0" prefWidth="67.0" text="-" />
+            <Button fx:id="increaseGroupNumberButton" layoutX="415.0" layoutY="5.0" mnemonicParsing="false" onAction="#increseGroupNumber" prefHeight="72.0" prefWidth="67.0" text="+" />
+            <Button fx:id="loadMenuButton" layoutX="512.0" layoutY="5.0" mnemonicParsing="false" onAction="#loadMenuItems" prefHeight="72.0" prefWidth="161.0" text="Load Menu">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
-      <Label layoutX="47.0" layoutY="366.0" text="TOTAL:">
+      <Label layoutX="61.0" layoutY="471.0" text="TOTAL:">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="totalTextField" editable="false" layoutX="135.0" layoutY="358.0" prefHeight="35.0" prefWidth="161.0">
+      <TextField fx:id="totalTextField" alignment="CENTER" editable="false" layoutX="149.0" layoutY="463.0" prefHeight="35.0" prefWidth="161.0">
          <font>
             <Font size="24.0" />
          </font>
       </TextField>
-      <Button fx:id="orderButton" layoutX="324.0" layoutY="358.0" mnemonicParsing="false" onAction="#placeOrder" prefHeight="51.0" prefWidth="128.0" text="Order" />
-      <Button fx:id="cancelButton" layoutX="477.0" layoutY="358.0" mnemonicParsing="false" onAction="#cancel" prefHeight="51.0" prefWidth="128.0" text="Cancel" />
-      <AnchorPane layoutX="639.0" layoutY="358.0" prefHeight="142.0" prefWidth="308.0">
+      <Button fx:id="orderButton" layoutX="338.0" layoutY="463.0" mnemonicParsing="false" onAction="#placeOrder" prefHeight="51.0" prefWidth="128.0" text="Order">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="cancelButton" layoutX="491.0" layoutY="463.0" mnemonicParsing="false" onAction="#cancel" prefHeight="51.0" prefWidth="128.0" text="Cancel">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <AnchorPane layoutX="653.0" layoutY="463.0" prefHeight="142.0" prefWidth="308.0">
          <children>
-            <Label layoutX="19.0" layoutY="13.0" text="Guest Information" />
-            <Label layoutX="15.0" layoutY="37.0" text="Gid:" />
-            <Label fx:id="gidLabel" layoutX="46.0" layoutY="37.0" text="gid info" />
-            <Label layoutX="16.0" layoutY="63.0" text="Wid:" />
-            <Label fx:id="widLabel" layoutX="47.0" layoutY="63.0" text="wid info" />
-            <Label layoutX="16.0" layoutY="88.0" text="Balance:" />
-            <Label fx:id="balanceLabel" layoutX="69.0" layoutY="88.0" text="balance info" />
-            <Label fx:id="wristbandInfoLabel" layoutX="15.0" layoutY="120.0" text="Wristband info label" />
-            <Label fx:id="wristbandErrorLabel" layoutX="16.0" layoutY="147.0" text="Wristband error label" />
+            <Label layoutX="19.0" layoutY="13.0" text="Guest Information">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="15.0" layoutY="65.0" text="Gid:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="gidLabel" layoutX="58.0" layoutY="65.0" text="gid info">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="16.0" layoutY="97.0" text="Wid:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="widLabel" layoutX="67.0" layoutY="97.0" text="wid info">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="16.0" layoutY="129.0" text="Balance:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="balanceLabel" layoutX="97.0" layoutY="129.0" text="balance info">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="wristbandInfoLabel" layoutX="15.0" layoutY="163.0" text="Wristband info label" textFill="#38a830">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="wristbandErrorLabel" layoutX="16.0" layoutY="190.0" text="Wristband error label" textFill="RED">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
-      <Label fx:id="errorOrderLabel" layoutX="47.0" layoutY="462.0" text="Order error label" />
-      <Label fx:id="informationOrderLabel" layoutX="47.0" layoutY="429.0" text="Order information label" />
+      <Label fx:id="errorOrderLabel" layoutX="61.0" layoutY="567.0" text="Order error label" textFill="RED">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="informationOrderLabel" layoutX="61.0" layoutY="534.0" text="Order information label" textFill="#3cc62d">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="informationLabel" layoutX="555.0" layoutY="114.0" text="Information label" textFill="#4ba42e">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorLabel" layoutX="555.0" layoutY="155.0" text="Error label" textFill="RED">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
