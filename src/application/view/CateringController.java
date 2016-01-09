@@ -96,6 +96,7 @@ public class CateringController implements Initializable {
     @FXML
     private Label errorOrderLabel;
 
+    private int currentCateringId;
     
     private ConnectDB connDB;
     private NFCCommunication nfcComm;
@@ -213,8 +214,10 @@ public class CateringController implements Initializable {
     public void placeOrder() {    	
     	List<Order> orderList = new ArrayList<Order>();
     	for(MenuItem mi : menuItemsData) {
-        	Order o = Order.createOrder(mi.getIid(), mi.getItemQuantity(), mi.getItemPrice());
-        	orderList.add(o);
+    		if(mi.getItemQuantity()>0) {
+    			Order o = Order.createOrder(mi.getIid(), mi.getItemQuantity(), mi.getItemPrice());
+    			orderList.add(o);
+    		}
     	}
     	newTransaction(orderList);
     	//updateBalance(Utility.INITIAL_BALANCE);
@@ -222,7 +225,7 @@ public class CateringController implements Initializable {
     
     public void newTransaction(List<Order> orderList) {
     	
-    	ProcessTransaction processTransaction = new ProcessTransaction(nfcComm, currentWristband, connDB, orderList);
+    	ProcessTransaction processTransaction = new ProcessTransaction(nfcComm, currentWristband, connDB, orderList, currentCateringId);
     	
     	processTransaction.setOnSucceeded(
     			new EventHandler<WorkerStateEvent>() {
@@ -298,6 +301,7 @@ public class CateringController implements Initializable {
     					menuItemsData.add(mi);
     				}
     				menuItemsTable.setItems(menuItemsData);
+    				currentCateringId = groupNumber;
     				_displayErrorMessage("");
     				_displayInformationMessage("Succesfully loaded menu");
     		    }

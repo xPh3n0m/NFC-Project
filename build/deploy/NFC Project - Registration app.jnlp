@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="NFC Project - Registration app.jnlp">
+  <information>
+    <title>NFC Project - Registration app</title>
+    <vendor>FestiBand</vendor>
+    <description>FestiBand - Catering App</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="libs\controlsfx-8.20.8.jar" size="957666" download="eager" />
+    <jar href="libs\json-simple-1.1.1.jar" size="23737" download="eager" />
+    <jar href="libs\openjfx-dialogs-1.0.2.jar" size="148557" download="eager" />
+    <jar href="libs\postgresql-9.3-1102.jdbc41.jar" size="592322" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="1000" height="500" main-class="application.CateringApp"  name="FestiBand - Catering App" />
+  <update check="background"/>
+</jnlp>

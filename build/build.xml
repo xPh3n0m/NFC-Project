@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<project name="KIWI Halloween - Bar Application" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	<project name="NFC Project - Registration app" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	<target name="init-fx-tasks">
 		<path id="fxant">
 			<filelist>
@@ -8,7 +8,7 @@
 			</filelist>
 		</path>
 	
-		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"      
+		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
 			uri="javafx:com.sun.javafx.tools.ant"
 			classpathref="fxant"/>
 	</target>
@@ -16,37 +16,37 @@
 		<delete dir="externalLibs" />
 		<delete dir="project" />
 		<delete dir="projectRefs" />
-		
+	
 		<mkdir dir="externalLibs" />
-		
+	
 		<copy todir="externalLibs">
-			<fileset dir="C:\Users\thier_000\java-workspace\KIWI Halloween - Bar Application">
-				<filename name="json-simple-1.1.1.jar"/>	
+			<fileset dir="C:\Users\Thierry\Documents\nfc_project\NFC Project - Registration app">
+				<filename name="openjfx-dialogs-1.0.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="C:\Users\thier_000\java-workspace\KIWI Halloween - Bar Application">
-				<filename name="postgresql-9.3-1102.jdbc41.jar"/>	
+			<fileset dir="C:\Users\Thierry\Documents\nfc_project\NFC Project - Registration app">
+				<filename name="controlsfx-8.20.8.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="C:\Users\thier_000\java-workspace\KIWI Halloween - Bar Application">
-				<filename name="controlsfx-8.20.8.jar"/>	
+			<fileset dir="C:\Users\Thierry\Documents\nfc_project\NFC Project - Registration app">
+				<filename name="json-simple-1.1.1.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="C:\Users\thier_000\java-workspace\KIWI Halloween - Bar Application">
-				<filename name="openjfx-dialogs-1.0.2.jar"/>	
+			<fileset dir="C:\Users\Thierry\Documents\nfc_project\NFC Project - Registration app">
+				<filename name="postgresql-9.3-1102.jdbc41.jar"/>
 			</fileset>
 		</copy>
-		
+	
 		<mkdir dir="project" />
 		<copy todir="project">
-			<fileset dir="C:\Users\thier_000\java-workspace\KIWI Halloween - Bar Application">
+			<fileset dir="C:\Users\Thierry\Documents\nfc_project\NFC Project - Registration app">
 				<include name="src/**" />
 			</fileset>
 		</copy>
-		
+	
 		<mkdir dir="projectRefs" />
 	</target>
 	<target name='do-compile'>
@@ -81,7 +81,7 @@
 				</fileset>
 			</classpath>
 		</javac>
-		
+	
 		<!-- Copy over none Java-Files -->
 		<copy todir="build/classes">
 		<fileset dir="project/src">
@@ -94,63 +94,69 @@
 	<target name="do-deploy" depends="setup-staging-area, do-compile, init-fx-tasks">
 		<delete file="dist"/>
 		<delete file="deploy" />
-		
+	
 		<mkdir dir="dist" />
 		<mkdir dir="dist/libs" />
-		
+	
 		<copy todir="dist/libs">
 			<fileset dir="externalLibs">
 				<include name="*" />
 			</fileset>
 		</copy>
-		
-		
+	
+	
 		<fx:resources id="appRes">
-			<fx:fileset dir="dist" includes="KIWI Halloween - Bar Application.jar"/>
+			<fx:fileset dir="dist" includes="NFC Project - Registration app.jar"/>
 			<fx:fileset dir="dist" includes="libs/*"/>
-		</fx:resources> 
-		
+		</fx:resources>
+	
 		<fx:application id="fxApplication"
-			name="KIWI Halloween - Bar Application"
-			mainClass="application.Main"
+			name="FestiBand - Catering App"
+			mainClass="application.CateringApp"
 			toolkit="fx"
 		/>
 	
 		<mkdir dir="build/classes/META-INF" />
-		
-		
-		
-		<fx:jar destfile="dist/KIWI Halloween - Bar Application.jar">
+	
+	
+	
+		<fx:jar destfile="dist/NFC Project - Registration app.jar">
 			<fx:application refid="fxApplication"/>
 			<fileset dir="build/classes">
 			</fileset>
 			<fx:resources refid="appRes"/>
-			
+	
 			<manifest>
-				<attribute name="Implementation-Vendor" value="kiwi"/>
-				<attribute name="Implementation-Title" value="KIWI Halloween - Bar Application"/>
+				<attribute name="Implementation-Vendor" value="FestiBand"/>
+				<attribute name="Implementation-Title" value="FestiBand - Catering App"/>
 				<attribute name="Implementation-Version" value="1.0"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
-		
+	
 	
 		<mkdir dir="deploy" />
 		<!-- Need to use ${basedir} because somehow the ant task is calculating the directory differently -->
 		<fx:deploy
+			verbose="true" 
 			embedJNLP="false"
 			extension="false"
+			width="1000" height="500"
 			includeDT="false"
 			offlineAllowed="true"
 			outdir="${basedir}/deploy"
-			outfile="KIWI Halloween - Bar Application" nativeBundles="exe"
+			outfile="NFC Project - Registration app" nativeBundles="exe"
+			placeholderref="RegistrationApp"
+			placeholderid="RegistrationApp"
 			updatemode="background" >
 	
-			<fx:info title="KIWI Halloween - Bar Application" vendor="kiwi"/>
+			<fx:platform basedir="${java.home}"/>
+			<fx:info title="NFC Project - Registration app" vendor="FestiBand"/>
+	
 			<fx:application refId="fxApplication"/>
 			<fx:resources refid="appRes"/>
 		</fx:deploy>
-		
-		
+	
+	
 	</target>
 </project>

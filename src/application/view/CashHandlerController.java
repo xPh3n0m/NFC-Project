@@ -199,7 +199,7 @@ public class CashHandlerController {
     
     public void creditWristband() {
     	double amount = new Double (sumTextField.getText());
-    	Order o = Order.createOrder(0, 1, -amount);
+    	Order o = Order.createOrder(Utility.CASH_ORDER_ID, 1, -amount);
     	List<Order> orderList = new ArrayList<Order>();
     	orderList.add(o);
     	newTransaction(orderList);
@@ -208,7 +208,7 @@ public class CashHandlerController {
     
     public void refundWristband() {
     	double amount = new Double (balanceLabel.getText());
-    	Order o = Order.createOrder(0, 1, amount);
+    	Order o = Order.createOrder(Utility.CASH_ORDER_ID, 1, amount);
     	List<Order> orderList = new ArrayList<Order>();
     	orderList.add(o);
     	newTransaction(orderList);

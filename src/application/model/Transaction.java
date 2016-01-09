@@ -24,13 +24,13 @@ public class Transaction {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public static Transaction newTransaction(NFCWristband wristband, List<Order> orderList, ConnectDB connDB) throws SQLException {
+	public static Transaction newTransaction(NFCWristband wristband, List<Order> orderList, int gpid, ConnectDB connDB) throws SQLException {
 		double amount = 0;
 		for(Order o : orderList) {
 			amount += o.getItemPrice() * o.getNumItem();
 		}
 		
-		int tid = connDB.newTransaction(wristband.getWid(), wristband.getGid(), wristband.getBalance(), amount);
+		int tid = connDB.newTransaction(wristband.getWid(), wristband.getGid(), wristband.getBalance(), amount, gpid);
 		
 		for(Order o : orderList) {
 			o.setTransactionId(tid);

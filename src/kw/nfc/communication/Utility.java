@@ -22,6 +22,8 @@ public final class Utility {
 	public static final int CARD_PRESENT = 2;
 	public static final int CARD_ABSCENT = 2;
 
+	public static final int CASH_ORDER_ID = 1;
+
 
 	
 	private static int currentGid = 0;

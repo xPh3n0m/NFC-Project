@@ -20,11 +20,18 @@ public class ProcessTransaction extends Service<Transaction>{
 	
 	private List<Order> orderList;
 	
-	public ProcessTransaction(NFCCommunication nfcComm, NFCWristband wristband, ConnectDB connDB, List<Order> orderList) {
+	private int gpid;
+	
+	public ProcessTransaction(NFCCommunication nfcComm, NFCWristband wristband, ConnectDB connDB, List<Order> orderList, int gpid) {
 		this.nfcComm = nfcComm;
 		this.connDB = connDB;
 		this.orderList = orderList;
 		this.wristband = wristband;
+		this.gpid = gpid;
+	}
+	
+	public ProcessTransaction(NFCCommunication nfcComm, NFCWristband wristband, ConnectDB connDB, List<Order> orderList) {
+		this(nfcComm, wristband, connDB, orderList, 0);
 	}
 
 	@Override
@@ -42,7 +49,7 @@ public class ProcessTransaction extends Service<Transaction>{
             		throw new Exception("Unsufficient balance");
             	}
             	
-            	Transaction t = Transaction.newTransaction(wristband, orderList, connDB);
+            	Transaction t = Transaction.newTransaction(wristband, orderList, gpid, connDB);
             	
             	wristband.setBalance(newBalance);
             	connDB.updateBalance(wristband, newBalance);

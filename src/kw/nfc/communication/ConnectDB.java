@@ -227,14 +227,15 @@ public class ConnectDB {
 		psm.executeUpdate();		
 	}
 
-	public int newTransaction(int wid, int gid, double balance, double amount) throws SQLException {
-		String query = "INSERT INTO transaction (wid, gid, amount, prev_balance, new_balance) VALUES (?, ?, ?, ?, ?) RETURNING tid;";
+	public int newTransaction(int wid, int gid, double balance, double amount, int gpid) throws SQLException {
+		String query = "INSERT INTO transaction (wid, gid, amount, prev_balance, new_balance, gpid) VALUES (?, ?, ?, ?, ?, ?) RETURNING tid;";
 		PreparedStatement psm = conn.prepareStatement(query);
 		psm.setInt(1, wid);
 		psm.setInt(2, gid);
 		psm.setDouble(3, amount);
 		psm.setDouble(4, balance);
 		psm.setDouble(5, balance - amount);
+		psm.setInt(6,  gpid);
 		ResultSet res = psm.executeQuery();
 		
 		int tid = -1;
@@ -255,7 +256,7 @@ public class ConnectDB {
 		ResultSet res = psm.executeQuery();
 		
 		int oid = -1;
-        while(res.next()) {
+        if(res.next()) {
         	oid = res.getInt("oid");
         }
         
@@ -359,7 +360,7 @@ public class ConnectDB {
 	public ArrayList<MenuItem> getMenuItems(int groupNumber) throws SQLException {
 		String query = "SELECT mu.iid, mu.name, mu.price, mu.description "
 				+ "FROM menu_items mu, group_items gi "
-				+ "WHERE ? = gi.gpid AND mu.iid = gi.iid";
+				+ "WHERE ? = gi.gpid AND mu.iid = gi.iid AND mu.iid > 1";
 		PreparedStatement psm;
 		ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
 	

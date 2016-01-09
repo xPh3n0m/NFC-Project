@@ -15,13 +15,13 @@ public class WriteOrder extends Service<String>{
 	
 	private int noBeers;
 	private int noSpirits;
-	private NFCCommunication nfc;
-	private ConnectDB2 connDB;
+	private _NFCCommunication nfc;
+	private ConnectDB connDB;
 	private Task<String> task;
 	
 	public WriteOrder() {
-		this.nfc = new NFCCommunication();
-		if(nfc.getStatus() != NFCCommunication.CONNECTED) {
+		this.nfc = new _NFCCommunication();
+		if(nfc.getStatus() != _NFCCommunication.CONNECTED) {
 			nfc.connectToDefaultTerminal();
 		}
 		
@@ -64,7 +64,7 @@ public class WriteOrder extends Service<String>{
 		task.cancel();
 	}
 	
-	public void setConnDB(ConnectDB2 connDB) {
+	public void setConnDB(ConnectDB connDB) {
 		this.connDB = connDB;
 	}
 

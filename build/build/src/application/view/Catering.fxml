@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="711.0" prefWidth="1296.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.40" fx:controller="application.view.CateringController">
+   <children>
+      <AnchorPane layoutX="55.0" layoutY="198.0" prefHeight="231.0" prefWidth="1196.0">
+         <children>
+            <TableView fx:id="menuItemsTable" prefHeight="231.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columns>
+                <TableColumn fx:id="itemNameColumn" minWidth="300.0" prefWidth="-1.0" text="Item name" />
+                <TableColumn fx:id="itemDescriptionColumn" minWidth="400.0" prefWidth="-1.0" text="Description" />
+                  <TableColumn fx:id="itemPriceColumn" minWidth="100.0" prefWidth="-1.0" text="Unit Price (CHF)" />
+                  <TableColumn fx:id="itemQuantityColumn" minWidth="100.0" prefWidth="-1.0" text="Quantity" />
+                  <TableColumn fx:id="totalPriceColumn" minWidth="100.0" prefWidth="-1.0" text="Price" />
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="47.0" layoutY="24.0" prefHeight="82.0" prefWidth="1232.0">
+         <children>
+            <Label layoutX="14.0" layoutY="23.0" text="Catering group #:">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="cateringGroupNumberTextField" alignment="CENTER" editable="false" layoutX="314.0" layoutY="5.0" prefHeight="72.0" prefWidth="100.0">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </TextField>
+            <Button fx:id="decreaseGroupNumberButton" layoutX="246.0" layoutY="5.0" mnemonicParsing="false" onAction="#decreaseGroupNumber" prefHeight="72.0" prefWidth="67.0" text="-" />
+            <Button fx:id="increaseGroupNumberButton" layoutX="415.0" layoutY="5.0" mnemonicParsing="false" onAction="#increseGroupNumber" prefHeight="72.0" prefWidth="67.0" text="+" />
+            <Button fx:id="loadMenuButton" layoutX="512.0" layoutY="5.0" mnemonicParsing="false" onAction="#loadMenuItems" prefHeight="72.0" prefWidth="161.0" text="Load Menu">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <Label layoutX="61.0" layoutY="471.0" text="TOTAL:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="totalTextField" alignment="CENTER" editable="false" layoutX="149.0" layoutY="463.0" prefHeight="35.0" prefWidth="161.0">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+      <Button fx:id="orderButton" layoutX="338.0" layoutY="463.0" mnemonicParsing="false" onAction="#placeOrder" prefHeight="51.0" prefWidth="128.0" text="Order">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="cancelButton" layoutX="491.0" layoutY="463.0" mnemonicParsing="false" onAction="#cancel" prefHeight="51.0" prefWidth="128.0" text="Cancel">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <AnchorPane layoutX="653.0" layoutY="463.0" prefHeight="142.0" prefWidth="308.0">
+         <children>
+            <Label layoutX="19.0" layoutY="13.0" text="Guest Information">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="15.0" layoutY="65.0" text="Gid:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="gidLabel" layoutX="58.0" layoutY="65.0" text="gid info">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="16.0" layoutY="97.0" text="Wid:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="widLabel" layoutX="67.0" layoutY="97.0" text="wid info">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="16.0" layoutY="129.0" text="Balance:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="balanceLabel" layoutX="97.0" layoutY="129.0" text="balance info">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="wristbandInfoLabel" layoutX="15.0" layoutY="163.0" text="Wristband info label" textFill="#38a830">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="wristbandErrorLabel" layoutX="16.0" layoutY="190.0" text="Wristband error label" textFill="RED">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Label fx:id="errorOrderLabel" layoutX="61.0" layoutY="567.0" text="Order error label" textFill="RED">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="informationOrderLabel" layoutX="61.0" layoutY="534.0" text="Order information label" textFill="#3cc62d">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="informationLabel" layoutX="555.0" layoutY="114.0" text="Information label" textFill="#4ba42e">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorLabel" layoutX="555.0" layoutY="155.0" text="Error label" textFill="RED">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.GuestInformationController">
+   <children>
+      <SplitPane dividerPositions="0.49906191369606" orientation="VERTICAL" prefHeight="535.0" prefWidth="452.0">
+         <items>
+            <AnchorPane prefHeight="800.0" prefWidth="450.0">
+               <children>
+                  <Label layoutX="36.0" layoutY="56.0" text="Guest name: " />
+                  <Label layoutX="36.0" layoutY="84.0" text="Balance:" />
+                  <Label layoutX="36.0" layoutY="29.0" text="Guest id:" />
+                  <TextField id="guestIdTextField" fx:id="guestIdTextField" editable="false" layoutX="128.0" layoutY="25.0" />
+                  <TextField id="guestNameTextField" fx:id="guestNameTextField" editable="false" layoutX="128.0" layoutY="52.0" />
+                  <TextField id="guestBalanceTextField" fx:id="guestBalanceTextField" editable="false" layoutX="128.0" layoutY="80.0" />
+                  <Label id="errorLabel" fx:id="errorLabel" layoutX="35.0" layoutY="156.0" />
+                  <Button fx:id="registerGuestButton" layoutX="303.0" layoutY="52.0" mnemonicParsing="false" onAction="#registerGuest" text="Register new guest" visible="false" />
+                  <Label fx:id="messageLabel" layoutX="36.0" layoutY="196.0" />
+                  <Button fx:id="getCashBackButton" layoutX="303.0" layoutY="80.0" mnemonicParsing="false" onAction="#getCashBack" text="Get cash back" visible="false" />
+                  <Button fx:id="addCashButton" disable="true" layoutX="217.0" layoutY="116.0" mnemonicParsing="false" onAction="#rechargeWristband" text="Recharge wristband" />
+                  <TextField fx:id="addCashTextField" disable="true" layoutX="128.0" layoutY="116.0" prefHeight="25.0" prefWidth="80.0" text="0.00" />
+                  <Button fx:id="unregisterGuestButton" disable="true" layoutX="303.0" layoutY="25.0" mnemonicParsing="false" onAction="#unregisterGuest" text="Unregister guest" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="800.0" prefWidth="84.0">
+               <children>
+                  <TextField fx:id="beersTextField" layoutX="213.0" layoutY="32.0" onAction="#updateTotal" prefHeight="25.0" prefWidth="60.0" text="0" />
+                  <Label layoutX="101.0" layoutY="36.0" text="Beer" />
+                  <Label layoutX="36.0" layoutY="201.0" text="Total:" />
+                  <TextField fx:id="totalTextField" editable="false" layoutX="71.0" layoutY="197.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+                  <Label layoutX="159.0" layoutY="36.0" text="5CHF" />
+                  <Button fx:id="orderButton" disable="true" layoutX="144.0" layoutY="197.0" mnemonicParsing="false" onAction="#placeOrder" text="Order" />
+                  <TextField fx:id="redWineTextField" layoutX="213.0" layoutY="62.0" onAction="#updateTotal" prefHeight="25.0" prefWidth="60.0" text="0" />
+                  <Label layoutX="76.0" layoutY="66.0" text="Red Wine" />
+                  <Label layoutX="159.0" layoutY="66.0" text="8CHF" />
+                  <TextField fx:id="whiteWineTextField" layoutX="212.0" layoutY="93.0" onAction="#updateTotal" prefHeight="25.0" prefWidth="60.0" text="0" />
+                  <Label layoutX="75.0" layoutY="97.0" text="White Wine" />
+                  <Label layoutX="158.0" layoutY="97.0" text="8CHF" />
+                  <TextField fx:id="spiritsTextField" layoutX="212.0" layoutY="132.0" onAction="#updateTotal" prefHeight="25.0" prefWidth="60.0" text="0" />
+                  <Label layoutX="75.0" layoutY="136.0" text="Spirits" />
+                  <Label layoutX="158.0" layoutY="136.0" text="10CHF" />
+                  <Button fx:id="transactionButton" layoutX="321.0" layoutY="197.0" mnemonicParsing="false" onAction="#transactionExample" text="Transaction" />
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

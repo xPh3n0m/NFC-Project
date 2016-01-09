@@ -263,7 +263,7 @@ public class NFCCommunication{
 	 */
 	private boolean _readPage(CardChannel cc, int offset) throws CardException {
         
-        byte[] readCommand = {(byte) 0xFF, (byte) 0xB0, (byte) 0x00, (byte) offset, (byte) 0x08};
+        byte[] readCommand =  {(byte) 0xFF, (byte) 0xB0, (byte) 0x00, (byte) offset, (byte) 0x08};
     	
     	CommandAPDU readData = new CommandAPDU(readCommand);
     	ResponseAPDU responseReadData = cc.transmit(readData);

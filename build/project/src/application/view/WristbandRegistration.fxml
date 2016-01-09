@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="background" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.view.WristbandRegistrationController">
+   <children>
+      <Label layoutX="31.0" layoutY="30.0" text="Registration Application" />
+      <AnchorPane layoutX="31.0" layoutY="102.0" prefHeight="477.0" prefWidth="749.0">
+         <children>
+            <SplitPane dividerPositions="0.43157894736842106" layoutX="106.0" layoutY="84.0" orientation="VERTICAL" prefHeight="477.0" prefWidth="749.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="199.0" prefWidth="747.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="14.0" text="Wristband information" />
+                        <Label layoutX="34.0" layoutY="45.0" text="Wristband id:" />
+                        <Label layoutX="34.0" layoutY="76.0" text="Unique identifier:" />
+                        <Label layoutX="34.0" layoutY="109.0" text="Status:" />
+                        <Label layoutX="34.0" layoutY="143.0" text="Balance:" />
+                        <Label fx:id="widInfoLabel" layoutX="112.0" layoutY="45.0" text="wid info" />
+                        <Label fx:id="atrInfoLabel" layoutX="136.0" layoutY="76.0" text="atr info" />
+                        <Label fx:id="statusInfoLabel" layoutX="78.0" layoutY="109.0" text="status info" />
+                        <Label fx:id="balanceInfoLabel" layoutX="85.0" layoutY="143.0" text="balance info" />
+                        <Label fx:id="errorLabel" layoutX="14.0" layoutY="171.0" text="Error Label" textFill="RED" />
+                        <Label fx:id="infoMessageLabel" layoutX="156.0" layoutY="14.0" text="Information Message Label" textFill="#989e00" />
+                        <Button fx:id="registerWristbandButton" layoutX="587.0" layoutY="50.0" mnemonicParsing="false" onAction="#registerWristband" text="Register Wristband" />
+                        <Button fx:id="unregisterWristbandButton" layoutX="575.0" layoutY="97.0" mnemonicParsing="false" onAction="#unregisterWristband" text="Unregister Wristband" />
+                     </children>
+                  </AnchorPane>
+                <AnchorPane fx:id="guestInformationAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                        <Button fx:id="activateWristbandButton" layoutX="17.0" layoutY="14.0" mnemonicParsing="false" onAction="#registerGuest" text="Activate Wristband" />
+                        <Button fx:id="deactivateWristbandButton" layoutX="146.0" layoutY="14.0" mnemonicParsing="false" onAction="#unregisterGuest" text="Deactivate Wristband" />
+                        <Label layoutX="17.0" layoutY="52.0" text="Guest ID:" />
+                        <Label layoutX="17.0" layoutY="97.0" text="First name:" />
+                        <Label layoutX="17.0" layoutY="132.0" text="Last name:" />
+                        <Label layoutX="17.0" layoutY="167.0" text="Email:" />
+                        <TextField fx:id="firstNameTextField" layoutX="86.0" layoutY="93.0" prefHeight="25.0" prefWidth="190.0" />
+                        <TextField fx:id="lastNameTextField" layoutX="86.0" layoutY="128.0" prefHeight="25.0" prefWidth="190.0" />
+                        <TextField fx:id="emailTextField" layoutX="86.0" layoutY="163.0" prefHeight="25.0" prefWidth="190.0" />
+                        <CheckBox fx:id="anonymousCheckbox" layoutX="161.0" layoutY="52.0" mnemonicParsing="false" onAction="#anonymize" text="Anonymous?" />
+                        <Label fx:id="gidLabel" layoutX="75.0" layoutY="52.0" text="gid label" />
+                        <Button fx:id="updateGuestButton" layoutX="21.0" layoutY="202.0" mnemonicParsing="false" onAction="#updateGuest" text="Update guest" />
+                     </children></AnchorPane>
+              </items>
+            </SplitPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
